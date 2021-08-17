@@ -13,6 +13,9 @@ const Wrapper = styled.button`
   justify-content: center;
   cursor: pointer;
   height: 38px;
+  &:hover, &:focus{
+    border: 1px solid ${props => props.color ? `${props.color}` : `#d7e1e7`};
+  }
 `
 
 const Loading = styled.span`
@@ -37,6 +40,8 @@ const Button = ({
   loading = false,
   children,
   className,
+  customLoading,
+  loadingChildren
 }) => (
   <Wrapper 
     borderColor={borderColor} 
@@ -45,7 +50,8 @@ const Button = ({
     color={color}
     onClick={onClick}>  
     {
-      loading ? <Loading color={color}/> : children
+      loading ? (customLoading ? loadingChildren  : <Loading color={color}/>) 
+        : children
     }
   </Wrapper>
 )

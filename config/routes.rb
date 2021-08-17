@@ -8,7 +8,9 @@ Rails.application.routes.draw do
   get '/superadmin/login', to: 'superadmins#login'
   get '/superadmin/register', to: 'superadmins#register'
   get '/superadmin', to: 'superadmins#home'
-  get '/superadmin/staff/new', to: 'superadmins#staff_new'
+  get '/superadmin/staffs', to: 'superadmins#staffs'
+  get '/superadmin/staffs/new', to: 'superadmins#staffs_new'
+  get '/superadmin/staffs/:slug', to: 'superadmins#staffs_detail'
   
   #staff section
   get '/staff/login', to: 'staffs#login'
@@ -23,11 +25,27 @@ Rails.application.routes.draw do
   #general scope api
   namespace :api do
     namespace :v1 do
+      resources :attachments, only: %i[create] do
+        member do
+          get 'list', to: 'attachments#list'
+        end        
+      end
+
       resources :users, only: %i[] do
         collection do
           get 'detail', to: 'users#detail'
         end
       end
+
+      namespace :superadmins do
+        resources :staffs, only: %i[create index] do
+          member do
+            get 'detail', to: 'staffs#detail'
+            put 'update', to: 'staffs#update'
+          end
+        end
+      end
+
     end
   end
 
@@ -38,8 +56,8 @@ Rails.application.routes.draw do
       #superadmins
       devise_for :superadmins,
         controllers: {
-          registrations: 'api/v1/staffs/registrations',
-          sessions: 'api/v1/staffs/sessions'
+          registrations: 'api/v1/superadmins/registrations',
+          sessions: 'api/v1/superadmins/sessions'
         },
         path_names: { 
           sign_in: '',

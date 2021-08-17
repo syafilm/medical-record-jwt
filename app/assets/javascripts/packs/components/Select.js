@@ -6,7 +6,6 @@ import styled from '@emotion/styled'
 
 const SelectStyle = {
   control: (base, state) => {
-    console.log(state, 'yolo');
     return({
       ...base,
       border: state.isFocused ? '1px solid #0083fc' : '1px solid #d7e1e7',
@@ -49,6 +48,9 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   margin-bottom: 20px;
+  .custom-select__single-value{
+    font-size: 14px;
+  }
 `
 
 const Maxlimit = styled.div`
@@ -72,7 +74,6 @@ const Select = ({
   darkMode, 
   value
 }) => {
-
   const Menu = props => {
     const optionSelectedLength = props.getValue().length || 0;
     return (
@@ -90,7 +91,6 @@ const Select = ({
 
   return(
     <Wrapper>
-
       {label}
       {
         multiple ?

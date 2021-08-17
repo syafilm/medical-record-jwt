@@ -37,10 +37,10 @@ class UserStore {
     }
   
   @action
-    handleSetRole = (type) => {
-      this.user.role = type
-      localStorage.setItem("role", JSON.stringify({role: type}))
-   }
+    handleSetRole = (role) => {
+      this.user.role = role
+      localStorage.setItem("role", JSON.stringify({role}))
+    }
   
   @action
     handleSetUser = (detail) => {

@@ -6,6 +6,7 @@ import {observer} from 'mobx-react'
 import moment from 'moment'
 import profile from 'images/profile.jpg'
 import {Sidebar, Header} from 'components'
+import {toJS} from 'mobx'
 import {Helpers} from 'utils'
 
 const Content = styled.div`
@@ -29,11 +30,15 @@ const Wrapper = observer(({
   const { user, handleNotification } = store.user
   const {sidebarMenu} = Helpers
   
+  // console.log(toJS(user), 'hello')
+
   return(
     <Content>
-      <Sidebar avatar={profile} menu={sidebarMenu}/>
+      <Sidebar
+        avatar={profile} 
+        menu={sidebarMenu}/>
       <Box>
-        <Header/>
+        <Header avatar={profile} email={user?.detail?.email} />
         {children}
       </Box>
     </Content>

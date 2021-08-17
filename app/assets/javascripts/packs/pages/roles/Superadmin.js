@@ -13,40 +13,21 @@ const Superadmin = ({ component: Component, title, computedMatch, ...rest }) => 
   const { user, handleSetRole, handleActiveBackgroundColor } = store.user
   const { authenticated = true, loading, detail } = user
   const {role} = cookies.getAccessToken() ? Jwt.decode(cookies.getAccessToken()) : {role: ''}
+  const {color, background} = cookies.getAccessToken() ? Jwt.decode(cookies.getAccessToken()) : {color: '', background: ''}
 
-  const initializeGuest = (slug) => {
-    let data = {}
-    if(slug === 'staff'){
-      data = {
-        background: '#FFE194',
-        color: '#b78913'
-      }
-    }else if(slug === 'superadmin'){
-      data = {
-        background: '#c3ece5',
-        color: '#4b988b'
-      }
-    }else if(slug === 'client'){
-      data = {
-        background: '#c9d7f5',
-        color: '#5f8eef'
-      }
-    }
-
-    if(typeof slug !== 'undefined'){
-      handleSetRole(slug)
-      handleActiveBackgroundColor(data)
-    }
-
+  const initializeData = (role, obj) => {
+    const data = {background: obj.background, color: obj.color}
+    handleSetRole(role)
+    handleActiveBackgroundColor(data)
   }
 
   React.useEffect(() => {
-    initializeGuest(slug)
+    initializeData(role, {color, background})
 
-    if (title && typeof slug !== 'undefined') return (document.title = `Medical shift project | ${Helpers.capitalizeFirstLetter(slug)} ${title}`)
+    if (title && role !== '') return (document.title = `Medical shift project | ${Helpers.capitalizeFirstLetter(role)} ${title}`)
     document.title = 'Medical shift project'
 
-  }, [title, slug])
+  }, [title, role])
 
   return (
     <Route

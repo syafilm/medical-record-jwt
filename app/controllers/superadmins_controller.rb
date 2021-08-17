@@ -4,10 +4,20 @@ class SuperadminsController < ApplicationController
   def home
 
   end
+
   #staff function
-  def staff_new
+  def staffs
+
+  end
+  
+  def staffs_new
     
   end
+
+  def staffs_detail
+
+  end
+
 
   def login
 

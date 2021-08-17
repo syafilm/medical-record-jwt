@@ -6,9 +6,10 @@ import { Routes, history } from 'utils'
 import {Provider} from 'context'
 import { RootStore } from 'stores'
 import { App } from 'pages'
-import { CookiesProvider } from 'react-cookie';
+import { CookiesProvider } from 'react-cookie'
+import 'react-confirm-alert/src/react-confirm-alert.css'
 
-// configure({ enforceActions: 'observed'})
+configure({ enforceActions: 'observed'})
 
 const value = new RootStore()
 // temporary use event turbolinks until turbolinks unused

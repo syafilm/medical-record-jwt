@@ -23,9 +23,36 @@ function checkEmail(value, label) {
   return isValid ? '' : `${label} must an email format`
 }
 
+function file(data){
+  let isValid = true
+
+  if (data.includes('jpg')
+     || data.includes('jpeg')
+     || data.includes('png')
+     || data.includes('gif')) {
+       isValid = false
+  }
+
+  return isValid ? '' : 'file should be image'  
+}
+
+function image(data) {
+  let isValid = false
+  if (data.includes('jpg')
+     || data.includes('jpeg')
+     || data.includes('png')
+     || data.includes('gif')) {
+       isValid = true
+  }
+
+  return isValid ? '' : 'file should be image'
+}
+
 const Validation = {
   checkExist,
   checkEmail,
+  image,
+  file
 }
 
 export default Validation

@@ -56,9 +56,27 @@ const RightHeader = styled.div`
     > li{
       display: inline-flex;
       margin-left: 10px;
+      align-items: center;
       > a{
+        align-items: center;
+        display: inline-flex;
+        > img{
+          width: 35px;
+          height: 35px;
+          object-fit: cover;
+          object-position: center;
+          border-radius: 50%;
+          margin-left: 0px;
+        }
         > i{
-          font-size: 22px;
+          background: #ECF1F4;
+          width: 35px;
+          height: 35px;
+          display: inline-flex;
+          justify-content: center;
+          align-items: center;
+          border-radius: 5px;
+          font-size: 20px;
         }
       }
     }
@@ -78,7 +96,7 @@ const Input = styled.input`
   }
 `
 
-const Header = () => {
+const Header = ({avatar, email}) => {
   return(
     <Wrapper>
       <LeftHeader>
@@ -89,11 +107,12 @@ const Header = () => {
       </LeftHeader>
       <RightHeader>
         <span>
-          {moment().format('dddd, D MMMM YYYY')}
+          {/* {moment().format('dddd, D MMMM YYYY')} */}
         </span>
         <ul>
           <li><a><i className="la la-bell"></i></a></li>
           <li><a><i className="la la-cog"></i></a></li>
+          <li><a><img src={avatar}/></a></li>
         </ul>
       </RightHeader>
     </Wrapper>

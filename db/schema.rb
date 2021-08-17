@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_07_24_033134) do
+ActiveRecord::Schema.define(version: 2021_08_12_235339) do
 
   create_table "addresses", charset: "utf8mb4", collation: "utf8mb4_bin", force: :cascade do |t|
     t.text "streetname"
@@ -24,6 +24,24 @@ ActiveRecord::Schema.define(version: 2021_07_24_033134) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["client_id"], name: "index_addresses_on_client_id"
     t.index ["staff_id"], name: "index_addresses_on_staff_id"
+  end
+
+  create_table "attachments", charset: "utf8mb4", collation: "utf8mb4_bin", force: :cascade do |t|
+    t.string "file"
+    t.string "name"
+    t.integer "size"
+    t.string "description"
+    t.string "model_type"
+    t.integer "model_id"
+    t.bigint "superadmin_id"
+    t.bigint "client_id"
+    t.bigint "staff_id"
+    t.text "uuid"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["client_id"], name: "index_attachments_on_client_id"
+    t.index ["staff_id"], name: "index_attachments_on_staff_id"
+    t.index ["superadmin_id"], name: "index_attachments_on_superadmin_id"
   end
 
   create_table "banks", charset: "utf8mb4", collation: "utf8mb4_bin", force: :cascade do |t|
@@ -113,6 +131,8 @@ ActiveRecord::Schema.define(version: 2021_07_24_033134) do
     t.datetime "remember_created_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.text "avatar"
+    t.text "files"
     t.index ["email"], name: "index_staffs_on_email", unique: true
     t.index ["reset_password_token"], name: "index_staffs_on_reset_password_token", unique: true
     t.index ["superadmin_id"], name: "index_staffs_on_superadmin_id"

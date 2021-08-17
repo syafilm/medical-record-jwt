@@ -34,17 +34,18 @@ const config = () => {
   }
 }
 
-export const base = () => {
+export const base = (uploadProgress) => {
   const {role} = getRole()
   return axios.create({
     baseURL: `${API_URL}/api/v1/${role}s/`,
-    headers: config()
+    headers: config(),
   })
 }
 
-export const basic = () => {
+export const basic = (uploadProgress) => {
   return axios.create({
     baseURL: `${API_URL}/api/v1/`,
-    headers: config()
+    headers: config(),
+    onUploadProgress: uploadProgress,
   })
 }

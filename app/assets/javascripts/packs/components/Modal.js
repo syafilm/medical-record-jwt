@@ -10,14 +10,14 @@ const Wrapper = styled.div`
   left: 0;
   bott: 0;
   right: 0;
-  display: flex;
+  display: ${props => props.show ? `flex` : `none`};
   align-items: center;
   justify-content: center;
 `
 
 const Body = styled.div`
-  width: ${props => props.width ? `${props.width}px` : `800px`};
-  height: ${props => props.height ? `${props.height}px` : `800px`};
+  width: ${props => props.width ? `${props.width}` : `800px`};
+  height: ${props => props.height ? `${props.height}` : `800px`};
   background: #fff;
   border-radius: 5px;
   z-index: 122;
@@ -25,7 +25,9 @@ const Body = styled.div`
 `
 
 const Content = styled.div`
-  padding: 1rem;
+  position: relative;
+  height: 100%;
+  width: 100%;
 `
 
 const Backdrop = styled.div`
@@ -40,10 +42,11 @@ const Modal = ({
   children, 
   width, 
   height, 
-  onClose
+  onClose,
+  show
 }) => {
   return(
-    <Wrapper>
+    <Wrapper show={show}>
       <Body 
         height={height} 
         width={width}>

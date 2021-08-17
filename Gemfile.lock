@@ -101,6 +101,10 @@ GEM
       railties (>= 4.1.0)
       responders
       warden (~> 1.2.3)
+    dotenv (2.7.6)
+    dotenv-rails (2.7.6)
+      dotenv (= 2.7.6)
+      railties (>= 3.2)
     erubi (1.10.0)
     erubis (2.7.0)
     ffi (1.15.3)
@@ -127,6 +131,18 @@ GEM
       ruby-vips (>= 2.0.17, < 3)
     jsonapi-renderer (0.2.2)
     jwt (2.2.3)
+    kaminari (1.2.1)
+      activesupport (>= 4.1.0)
+      kaminari-actionview (= 1.2.1)
+      kaminari-activerecord (= 1.2.1)
+      kaminari-core (= 1.2.1)
+    kaminari-actionview (1.2.1)
+      actionview
+      kaminari-core (= 1.2.1)
+    kaminari-activerecord (1.2.1)
+      activerecord
+      kaminari-core (= 1.2.1)
+    kaminari-core (1.2.1)
     listen (3.5.1)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
@@ -273,8 +289,10 @@ DEPENDENCIES
   capybara (>= 3.26)
   carrierwave (~> 2.0)
   devise
+  dotenv-rails
   haml-rails
   jwt
+  kaminari
   listen (~> 3.3)
   mysql2 (= 0.5)
   pry-rails

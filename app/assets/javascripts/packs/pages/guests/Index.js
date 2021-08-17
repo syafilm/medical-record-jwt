@@ -10,7 +10,7 @@ const userRoles = [
     id: 0,
     url: '',
     slug: 'superadmin',
-    title: 'Superdmin',
+    title: 'Superadmin',
     description: 'Admin can manage staff and interact with client directly',
     background: '#c3ece5',
     color: '#4b988b'
@@ -115,7 +115,7 @@ const Index = observer(() => {
           }
         </ChildWrapper>
         <Footer>
-          Dapatkan aplikasi skul.id agar dapat melakukan presensi online, lihat jadwal mata pelajaran, dan fitur-fitur lainnya.
+          This app allow you connect superadmin to client and staff directly with message feature, tracking time for the staff, and calculate the client cost
         </Footer>
         <Copy>
           <span>Created by Syafil m</span>
