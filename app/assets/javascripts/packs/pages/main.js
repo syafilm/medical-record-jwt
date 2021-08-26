@@ -8,6 +8,7 @@ import { RootStore } from 'stores'
 import { App } from 'pages'
 import { CookiesProvider } from 'react-cookie'
 import 'react-confirm-alert/src/react-confirm-alert.css'
+import 'react-input-range/lib/css/index.css'
 
 configure({ enforceActions: 'observed'})
 

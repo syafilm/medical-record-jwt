@@ -21,6 +21,8 @@ const Box = styled.div`
   height: 100%;
   display: flex;
   flex-direction:column;
+  left: 240px;
+  position: relative;
 `
 
 const Wrapper = observer(({

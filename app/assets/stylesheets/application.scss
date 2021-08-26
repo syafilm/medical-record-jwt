@@ -24,7 +24,7 @@
    height: 100%;
    margin: 0px;
    #main-app{
-     height: 100%;
+     height: auto;
    }
  }
 
@@ -61,10 +61,14 @@
    margin: 0px;
  }
 
-.react-confirm-alert-overlay {
-  background: rgba(0, 0, 0, 0.548) !important;
-  animation: react-confirm-alert-fadeIn 0ms 0ms forwards !important;
-}
+
+ #react-confirm-alert{
+   .react-confirm-alert-overlay {
+    z-index: 111;
+    background: rgba(0, 0, 0, 0.548) !important;
+    animation: react-confirm-alert-fadeIn 0ms 0ms forwards !important;
+  }
+ }
 
 .react-confirm-alert-blur{
   filter: none !important;

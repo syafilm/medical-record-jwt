@@ -19,7 +19,15 @@ module Api
           @attachment = attachment
           render json: @attachment, status: :created
         end
+      end
 
+      def destroy
+        id = params['id']
+        attachment = Attachment.find_by(id: id)
+        if attachment.destroy
+          @attachment = attachment
+          render json: @attachment,  status: :ok
+        end
       end
 
 

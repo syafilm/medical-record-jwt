@@ -31,7 +31,7 @@ const Wrapper = styled.div`
 
 const Bottom = styled.div`
   display: flex;
-  justify-content: ${props => props.useCancelBtn ? `space-between` : `flex-end`};
+  justify-content: ${props => props.cancelBtn ? `space-between` : `flex-end`};
   align-items: center;
   padding-top: 15px;
   button {
@@ -45,10 +45,12 @@ const Bottom = styled.div`
 const Cancel = styled.button`
   color: #a1aeb7;
   border: 0px;
+  cursor: pointer;
 `
 
 const Submit = styled.button`
   border: 0px;
+  cursor: pointer;
   color: ${props => props.buttonColor === 'danger' ? `#E3001E` : `#0ecab8`};
 `
 
@@ -60,7 +62,7 @@ const Dialog = ({
   textYes,
   textNo,
   buttonColor,
-  useCancelBtn = true,
+  cancelBtn = true,
   children,
   hideBottom,
   noPadding,
@@ -84,9 +86,9 @@ const Dialog = ({
         </div>
       )}
       {!hideBottom &&
-        <Bottom useCancelBtn={useCancelBtn}>
+        <Bottom cancelBtn={cancelBtn}>
           {
-            useCancelBtn && 
+            cancelBtn && 
             <Cancel onClick={onClickNo}>
               {textNo}
             </Cancel>

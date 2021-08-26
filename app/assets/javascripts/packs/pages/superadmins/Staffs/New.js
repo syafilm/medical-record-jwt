@@ -188,7 +188,9 @@ const New = observer(() => {
     avatarPreviewExist: false, avatarEditor: false, avatarPreview: '',
     avatarError: '', position: { x: 1, y: 0.5 }, staffLoading: false,
     scale: 1, rotate: 0, borderRadius: 0, width: 300,
-    height: 300, qualification: []
+    height: 300, qualification: [],
+    files: [],
+    temporaryFiles: []
   })
 
   const [showModalAvatar, setShowModalAvatar] = React.useState(false)

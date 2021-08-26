@@ -7,15 +7,16 @@ import {Input, Select, Modal, Button, Dialog} from 'components'
 import {Helpers, Breakpoints, Validation} from 'utils'
 import {ApiStaffs, ApiAttachments} from 'api'
 import {ModelStaff, ModelAttachment} from 'models'
-import {confirmAlert} from 'react-confirm-alert';
+import {confirmAlert} from 'react-confirm-alert'
 import moment from 'moment'
 import avatar from 'images/avatar.png'
 import Dropzone from 'react-dropzone'
 import AvatarEditor from 'react-avatar-editor'
 import InputRange from 'react-input-range'
 import Wrapper from '../Wrapper'
-import 'react-input-range/lib/css/index.css'
 import uuid from 'uuid'
+import Information from './elements/Detail/Information'
+import Profile from './elements/Detail/Profile'
 
 const Content = styled.div`
   display: flex;
@@ -25,199 +26,10 @@ const Content = styled.div`
   }
 `
 
-const Profile = styled.div`
-  display: flex;
-  > div{
-    display: flex;
-    flex-direction: column;
-    > h3{
-      font-family: 'OpenSans Bold';
-    }
-    > span{
-      font-size: 14px;
-      color: rgba(0,0,0, 0.6);
-    }
-  }
-`
-
-const Avatar = styled.img`
-  width: 150px;
-  height: 150px;
-  border-radius: 5px;
-  object-fit: cover;
-  object-position: cover;
-  position: relative;
-  margin-right: 10px;
-`
-
-const Card = styled.div`
-  padding: 25px 15px;
-  border-bottom:1px solid #d7e1e7;
-  background: #fff;
-  border-radius: 0px;
-`
-
-const Info = styled.div`
-  display: flex;
-  margin-top: auto;
-  ul{
-    padding: 0px;
-    margin: 0px;
-    list-style: none;
-    li{
-      display: inline-flex;
-      align-items: center;
-      width: calc(50% - 30px);
-      margin-right: 15px;
-      margin-bottom: 10px;
-      &:nth-of-type(3), 
-      &:nth-of-type(4){
-        margin-bottom: 0px;
-      }
-      font-size: 14px;
-      > i {
-        font-size: 20px;
-        margin-right: 5px;
-      }
-    }
-  }
-`
-
 const Box = styled.div`
   display: flex;
   padding: 15px;
   flex-direction: column;
-`
-
-const Section = styled.div`
-  width: 33%;
-  padding: 15px;
-  > h4{
-    font-family: 'OpenSans Bold';
-  }
-  > div{
-    > h4{
-      font-family: 'OpenSans Bold';
-    }
-    > span{
-      font-size: 14px;
-    }
-    &:nth-of-type(1){
-      margin-bottom: 15px;
-    }
-  }
-  ul.attachment{
-    display: flex;
-    padding: 0px;
-    margin: 0px;
-    margin-bottom: 15px;
-    flex-direction: column;
-    > li{
-      display: flex;
-      align-items: flex-start;
-      margin-bottom: 5px;
-      > div{
-        > span{
-          &:first-of-type{
-            color: #4b988b;
-          }
-        }
-      }
-      &:last-of-type{
-        > span{
-          font-size: 14px;
-          color: #4b988b;
-          cursor: pointer;
-        }
-      }
-      > i{
-        font-size: 34px;
-        width: 24px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-      }
-      > div{
-        margin-left: 10px;
-        width: 100%;
-        position: relative;
-        > i{
-          cursor: pointer;
-          right: 0px;
-          position: absolute;
-          width: 16px;
-          height: 16px;
-          top: 2px;
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          border-radius: 50%;
-          background: #000;
-          color: #fff;
-          font-size: 10px;
-          font-style: normal;
-        }
-        > span{
-          display: flex;
-          font-size: 14px;
-          width: 100%;
-          &:nth-of-type(2){
-            font-size: 13px;
-          }
-          &:nth-of-type(1){
-            margin-bottom: 0px;
-            font-family: 'OpenSans Bold';
-            position: relative;
-            display: -webkit-box;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: normal;
-            -webkit-line-clamp: 1;
-            width: 95%;
-          }
-        }
-      }
-    }
-  }
-  ul.skills{
-    padding: 0px;
-    list-style: none;
-    margin: 0px;
-    > li{
-      margin-right: 10px;
-      display: inline-flex;
-      > a{
-        padding: 3px 0px;
-        color: #4b988b;
-        border-radius: 4px;
-        font-size: 14px;
-        margin-bottom: 10px;
-        display: flex; 
-      }
-    }
-  }
-  ul.social-media{
-    padding: 0px;
-    list-style: none;
-    margin: 0px;
-    li{
-      margin-bottom: 5px;
-      display: flex;
-      align-items: center;
-      > a{
-        display: flex;
-        align-items: center;
-        > i{
-          margin-right: 5px;
-          font-size: 22px;
-        }
-      }
-    }
-  }
-  > span{
-    font-size: 14px;
-  }
 `
 
 const Tab = styled.ul`
@@ -243,10 +55,6 @@ const Tab = styled.ul`
       }
     }
   }
-`
-
-const TabDetail = styled.div`
-  display: flex;
 `
 
 const Attachment = styled.div`
@@ -307,6 +115,7 @@ const Attachment = styled.div`
           color: #fff;
           font-size: 10px;
           font-style: normal;
+          cursor: pointer;
         }
         > span{
           display: flex;
@@ -326,9 +135,187 @@ const Attachment = styled.div`
             white-space: normal;
             -webkit-line-clamp: 1;
             width: 95%;
+            color: #4b988b;
           }
         }
       }
+    }
+  }
+`
+
+const General = styled.div`
+  display: flex;
+  padding: 15px;
+  padding-left: 0px;
+  padding-right: 0px;
+  flex-direction: column;
+  @media ${Breakpoints.laptop} {
+    max-width: 768px;
+  }
+  > h3, h4{
+    font-family: 'OpenSans Bold';
+  }
+`
+
+const Form = styled.div`
+  display: block;
+  width: 100%;
+  margin-top: 15px;
+  margin-bottom: 15px;
+`
+
+const Wardtime = styled.div`
+  display: flex;
+  align-items: center;
+  margin-left: -15px;
+  margin-right: -15px;
+  > div{
+    width: 32.3%;
+    padding-left: 15px;
+    padding-right: 15px;
+    > input{
+      min-width: unset;
+      width: auto;
+    }
+  }
+`
+
+const Wardcontact = styled.div`
+  display: flex;
+  align-items: center;
+  margin-left: -15px;
+  margin-right: -15px;
+  > div{
+    width: 50%;
+    padding-left: 15px;
+    padding-right: 15px;
+    > input{
+      min-width: unset;
+      width: auto;
+    }
+  }
+`
+
+const Subtitle = styled.div`
+  display: flex;
+  align-items: center;
+  > h3, h4{
+    font-family: 'OpenSans Bold';
+  }
+  > div{
+    display: inline-flex;
+    align-items:center;
+    margin-left: auto;
+    color: #4b988b;
+    > span{
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      &:nth-of-type(2){
+        margin-left: 10px;
+      }
+      &:nth-of-type(1){
+        > b{
+          font-size: 12px;
+          i{
+            position: relative;
+            top: 1px;
+          }
+        }
+      }
+      > b{
+        margin-right: 5px;
+        color: #4b988b;
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+        border: 2px solid #4b988b;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-style: normal;
+      }
+    }
+  }
+`
+
+const Employeetime = styled.div`
+  display: flex;
+  align-items: center;
+  margin-left: -15px;
+  margin-right: -15px;
+  > div{
+    width: 32.3%;
+    padding-left: 15px;
+    padding-right: 15px;
+    > input{
+      min-width: unset;
+      width: auto;
+    }
+  }
+`
+
+const Address = styled.div`
+  display: flex;
+  align-items: center;
+  margin-left: -15px;
+  margin-right: -15px;
+  > div{
+    width: 50%;
+    padding-left: 15px;
+    padding-right: 15px;
+    > input{
+      min-width: unset;
+      width: auto;
+    }
+  }
+`
+
+const Region = styled.div`
+  display: flex;
+  align-items: center;
+  margin-left: -15px;
+  margin-right: -15px;
+  > div{
+    width: 32.3%;
+    padding-left: 15px;
+    padding-right: 15px;
+    > input{
+      min-width: unset;
+      width: auto;
+    }
+  }
+`
+
+const Company = styled.div`
+  display: flex;
+  align-items: center;
+  margin-left: -15px;
+  margin-right: -15px;
+  > div{
+    width: 50%;
+    padding-left: 15px;
+    padding-right: 15px;
+    > input{
+      min-width: unset;
+      width: auto;
+    }
+  }
+`
+
+const Banking = styled.div`
+  display: flex;
+  align-items: center;
+  margin-left: -15px;
+  margin-right: -15px;
+  > div{
+    width: 50%;
+    padding-left: 15px;
+    padding-right: 15px;
+    > input{
+      min-width: unset;
+      width: auto;
     }
   }
 `
@@ -342,16 +329,30 @@ const Detail = observer(() => {
   const query = new URLSearchParams(location.search)
   const tab = query.get('tab') === null ? 'information' : query.get('tab');
   const [staff, setStaff] = React.useState({
-    detail: {},
-    staffLoading: true,
-    formFileLoading: false,
-    files: [],
-    filesLoading: [],
-    temporaryFiles: [],
-    fileError: '',
-    activeTab: tab,
-    modelId: '',
-    modelType: 'staff',
+    detail: {}, staffLoading: true, formFileLoading: false,
+    files: [], filesLoading: [], temporaryFiles: [],
+    fileError: '', activeTab: tab, modelId: '',
+    modelType: 'staff', department: '', departmentOption: [],
+    departmentError: '', contactName: '', contactNameOption: [],
+    contactNameError: '', early: '', earlyError: '',
+    midnight: '', midnightError: '', late: '',
+    lateError: '', contactEmail: '', contactEmailError: '',
+    contactNumber: '', contactNumberError: '', entryDate: '',
+    entryDateError: '', exitDate: '', exitDateError: '',
+    contractDate: '', contractDateError: '',
+    street: '', streetError: '',
+    streetNumber: '', streetNumberError: '',
+    zipCode: '', zipCodeError: '',
+    region: '', regionError: '',
+    country: '', countryError: '',
+    companyName: '', companyNameError: '',
+    ceo: '', ceoError: '',
+    web: '', webError: '',
+    telephone: '', telephoneError: '',
+    bankname: '', banknameError: '',
+    iban: '', ibanError: '',
+    bic: '', bicError: '',
+    accountHoldler: '', accountHoldlerError: '',
   })
   const [showModalAttachment, setShowModalAttachment] = React.useState(false);
 
@@ -363,7 +364,8 @@ const Detail = observer(() => {
         detail: detail.data,
         staffLoading: false,
         modelId: detail.data.id,
-        files: attachment.data
+        files: attachment.data,
+        temporaryFiles: attachment.data,
       }))
     } catch (e) {
       console.log(e)
@@ -377,9 +379,11 @@ const Detail = observer(() => {
     while (i < newFiles.length) {
       const total = i++
       const theFile = {
-        ...newFiles[total],
         name: newFiles[total].name, 
-        size: newFiles[total].size, 
+        size: newFiles[total].size,
+        file: {
+          url: newFiles[total].preview
+        },
         uuid: uuid.v4(),
         progress: {}
       }
@@ -400,6 +404,18 @@ const Detail = observer(() => {
     }))
   }
 
+  const handleDeleteFile = async(id) => {
+    try {
+      const {data} = await ApiAttachments.destroy(id)
+      if (process.env.ENV_APP === 'development') {
+        console.log('file successfully deleted')
+        getStaffsDetail(slug)
+      }
+    } catch (e) {
+      console.log(e)      
+    }
+  }
+
   const handleUploadFile = async(staff, file, uuid) => {
     try {
       const objectToSend = ModelAttachment.params({...staff, file, uuid})
@@ -408,7 +424,7 @@ const Detail = observer(() => {
         ({...prev,
           temporaryFiles: prev.temporaryFiles.map(a => {
             if(a.uuid === data.uuid){
-              return{...a, progress: {}}
+              return{...a, ...data, progress: {}}
             }
             return {...a}
           })
@@ -418,7 +434,24 @@ const Detail = observer(() => {
     }
   }
 
-  const handleDeleteFile = () => {
+  const handleInputSelect = (type) => (newValue) => {
+    setStaff(prev => ({
+      ...prev, [type]: newValue,
+      [`${type}Error`]: Validation.checkExist(newValue, type)
+    }))
+  }
+
+  const handleInput = (type) => (e) => {
+    const {value} = e.target
+    setStaff(prev => ({
+      ...prev,
+      [type]: value,
+      [`${type}Error`]: type === 'email' ? (Validation.checkExist(value, type) === '' ? Validation.checkEmail(value, type) : Validation.checkExist(value, type)) 
+      : Validation.checkExist(value, type)
+    }))
+  }
+
+  const confirmDeleteFile = (id) => () => {
     confirmAlert({
       customUI: ({ onClose }) => {
         return (
@@ -428,6 +461,7 @@ const Detail = observer(() => {
             textYes="Yes"
             onClickNo={onClose}
             onClickYes={() => {
+              handleDeleteFile(id);
               onClose();
             }}
             buttonColor="danger"
@@ -443,6 +477,27 @@ const Detail = observer(() => {
 
   const { hexToRgb, detailTabStaff, readablizeBytes } = Helpers
   const {r, g, b} = hexToRgb(activeBackground)
+  const {
+    detail, activeTab, temporaryFiles, formFileLoading,
+    departmentError, departmentOption, department,
+    early, earlyError, midnight, midnightError, late, lateError,
+    contactName, contactNameError, contactNameOption,
+    contactEmail, contactEmailError, contactNumber, contactNumberError,
+    entryDate, entryDateError, exitDate, exitDateError,
+    contractDate, contractDateError,
+    street, streetError, streetNumber, 
+    streetNumberError, zipCode, zipCodeError,
+    region, regionError,
+    country, countryError,
+    companyName, companyNameError,
+    ceo, ceoError,
+    web, webError,
+    telephone, telephoneError,
+    bankname, banknameError,
+    iban, ibanError,
+    bic, bicError,
+    accountHoldler, accountHoldlerError,
+  } = staff
 
   if (process.env.ENV_APP === 'development') console.log(staff, 'object state')
 
@@ -451,25 +506,9 @@ const Detail = observer(() => {
       <Wrapper>
         <Content>
           {
-            Object.keys(staff.detail).length > 0 &&
+            Object.keys(detail).length > 0 &&
             <>
-              <Card>
-                <Profile>
-                  <Avatar src={staff.detail.avatar.url}/>
-                  <div>
-                    <h3>{staff.detail.name}</h3>
-                    <span>{staff.detail.email}</span>
-                    <Info>
-                      <ul>
-                        <li><i className="las la-map-marked-alt"></i> Jakarta, Indonesia</li>
-                        <li><i className="la la-phone"></i> {staff.detail.phone}</li>
-                        <li><i className="la la-envelope"></i> {staff.detail.email}</li>
-                        <li><i className="la la-link"></i> marvlous.com</li>
-                      </ul>
-                    </Info>
-                  </div>
-                </Profile>
-              </Card>
+              <Profile detail={detail}/>
               <Box>
                 <Tab>
                   {detailTabStaff.map((a) => {
@@ -478,54 +517,337 @@ const Detail = observer(() => {
                         onClick={() => setStaff(prev => ({...prev, activeTab: a.slug}))}
                         replace
                         to={`${location.pathname}?tab=${a.slug}`} 
-                        className={`${a.slug === staff.activeTab ? `active` : ``}`}>
+                        className={`${a.slug === activeTab ? `active` : ``}`}>
                         {a.label}
                       </Link>
                     </li>
                   })}
                 </Tab>
-                <TabDetail>
-                  <Section>
-                    <div>
-                      <h4>About</h4>
-                      <span>I'm {staff.detail.name}, a software developer with a Computer Science degree from Brown University. In the past I've worked as an intern for Microsoft and Pixar developing in C++. Most of my personal work revolves around web development and graphics. This site is where I put my side projects when I finish them.</span>
-                    </div>
-                    <div>
-                      <h4>Attachment</h4>
-                      <ul className="attachment">
-                        {staff.files.map(a => {
-                          return <li key={a.id}>
-                            <i className="las la-file-alt"></i>
-                            <div>
-                              <span>{a.name}</span>
-                              <span>{readablizeBytes(a.size)}</span>
-                              <i onClick={handleDeleteFile}>x</i>
-                            </div>
-                          </li>
-                        })}
-                        <li><span onClick={() =>{setShowModalAttachment(true)}}>Add an Attachment +</span></li>
-                      </ul>
-                    </div>
-                  </Section>
-                  <Section>
-                    <h4>Skills</h4>
-                    <ul className="skills">
-                      <li><a>web-development</a></li>
-                      <li><a>javascript</a></li>
-                      <li><a>mobile-app</a></li>
-                      <li><a>ruby</a></li>
-                      <li><a>nginx</a></li>
-                    </ul>
-                  </Section>
-                  <Section>
-                    <h4>Social Media</h4>
-                    <ul className="social-media">
-                      <li><a><i className="la la-facebook"></i> {staff.detail.name}</a></li>
-                      <li><a><i className="la la-twitter"></i> {staff.detail.name}</a></li>
-                      <li><a><i className="la la-linkedin"></i> {staff.detail.name}</a></li>
-                    </ul>
-                  </Section>
-                </TabDetail>
+                {
+                  activeTab === 'information' &&
+                  (<Information
+                    staff={staff}
+                    setShowModalAttachment={setShowModalAttachment}
+                    confirmDeleteFile={confirmDeleteFile}
+                    readablizeBytes={readablizeBytes}
+                  />)
+                }
+                {
+                  activeTab === 'general' && 
+                  (
+                    <General>
+                      <Subtitle>
+                        <h4>Clicnic Structure</h4>
+                        <div>
+                          <span>
+                            <b><i className='la la-pencil'></i></b>
+                            Edit
+                          </span>
+                          {/* &bull; */}
+                          <span><b>+</b> Add</span>
+                        </div>
+                      </Subtitle>
+                      <Form>
+                        <Select
+                          label={
+                            (departmentError === '' ? <label>Department&nbsp;<span className="optional">(optional)</span></label> :
+                            <label className="error">{departmentError}</label>)
+                          }
+                          options={departmentOption}
+                          value={department}
+                          error={departmentError}
+                          onChange={handleInputSelect('department')}
+                        />
+                        <Wardtime>
+                          <Input
+                            label={
+                              (earlyError === '' ? <label>Early shift</label> :
+                              <label className="error">{earlyError}</label>)
+                            }
+                            placeholder="Early shift"
+                            value={early}
+                            error={earlyError}
+                            type="text"
+                            onChange={handleInput('early')}
+                          />
+                          <Input 
+                            label={
+                              (midnightError === '' ? <label>Mid shift</label> :
+                              <label className="error">{midnightError}</label>)
+                            }
+                            placeholder="Mid shift"
+                            value={midnight}
+                            error={midnightError}
+                            type="text"
+                            onChange={handleInput('midnight')}
+                          />
+                          <Input 
+                            label={
+                              (lateError === '' ? <label>Late shift</label> :
+                              <label className="error">{lateError}</label>)
+                            }
+                            placeholder="Mid shift"
+                            value={late}
+                            error={lateError}
+                            type="text"
+                            onChange={handleInput('late')}
+                          />
+                        </Wardtime>
+                        <Select
+                          label={
+                            (contactNameError === '' ? <label>Main Contact on Ward</label> :
+                            <label className="error">{contactNameError}</label>)
+                          }
+                          options={contactNameOption}
+                          value={contactName}
+                          error={contactNameError}
+                          onChange={handleInputSelect('contactName')}
+                        />
+                        <Wardcontact>
+                          <Input 
+                            label={null}
+                            placeholder="Contact email"
+                            value={contactEmail}
+                            error={contactEmailError}
+                            type="text"
+                            onChange={handleInput('contactEmail')}
+                          />
+                          <Input
+                            label={null}
+                            placeholder="Contact number"
+                            value={contactNumber}
+                            error={contactNumberError}
+                            type="text"
+                            onChange={handleInput('contactNumber')}
+                          />
+                        </Wardcontact>
+                      </Form>
+                      <Subtitle>
+                        <h4>Employee State</h4>
+                        <div>
+                          <span>
+                            <b><i className='la la-pencil'></i></b>
+                            Edit
+                          </span>
+                        </div>
+                      </Subtitle>
+                      <Form>
+                        <Employeetime>
+                          <Input 
+                            label={
+                              (entryDateError === '' ? <label>Entry Date</label> :
+                              <label className="error">{entryDateError}</label>)
+                            }
+                            placeholder="Entry date"
+                            value={entryDate}
+                            error={entryDateError}
+                            type="text"
+                            onChange={handleInput('entryDate')}
+                          />
+                          <Input 
+                            label={
+                              (exitDateError === '' ? <label>Exit Date</label> :
+                              <label className="error">{exitDateError}</label>)
+                            }
+                            placeholder="Exit Date"
+                            value={exitDate}
+                            error={exitDateError}
+                            type="text"
+                            onChange={handleInput('exitDate')}
+                          />
+                          <Input 
+                            label={
+                              (contractDateError === '' ? <label>Contract until</label> :
+                              <label className="error">{contractDateError}</label>)
+                            }
+                            placeholder="Contract until"
+                            value={contractDate}
+                            error={contractDateError}
+                            type="text"
+                            onChange={handleInput('contractDate')}
+                          />
+                        </Employeetime>
+                      </Form>
+                      <Subtitle>
+                        <h4>Clinic Adress</h4>
+                        <div>
+                          <span>
+                            <b><i className='la la-pencil'></i></b>
+                            Edit
+                          </span>
+                        </div>
+                      </Subtitle>
+                      <Form>
+                        <Address>
+                          <Input 
+                            label={
+                              (streetError === '' ? <label>Streetname</label> :
+                              <label className="error">{streetError}</label>)
+                            }
+                            placeholder="Street"
+                            value={street}
+                            error={streetError}
+                            type="text"
+                            onChange={handleInput('street')}
+                          />
+                          <Input 
+                            label={
+                              (streetNumberError === '' ? <label>Streetnumber</label> :
+                              <label className="error">{streetNumberError}</label>)
+                            }
+                            placeholder="Street number"
+                            value={streetNumber}
+                            error={streetNumberError}
+                            type="text"
+                            onChange={handleInput('streetNumber')}
+                          />
+                        </Address>
+                        <Region>
+                          <Input
+                            label={
+                              (zipCodeError === '' ? <label>Zip code</label> :
+                              <label className="error">{zipCodeError}</label>)
+                            }
+                            placeholder="Zipcode"
+                            value={zipCode}
+                            error={zipCodeError}
+                            type="text"
+                            onChange={handleInput('zipCode')}
+                          />
+                          <Input
+                            label={
+                              (regionError === '' ? <label>Region</label> :
+                              <label className="error">{regionError}</label>)
+                            }
+                            placeholder="Region"
+                            value={region}
+                            error={regionError}
+                            type="text"
+                            onChange={handleInput('region')}
+                          />
+                          <Input
+                            label={
+                              (countryError === '' ? <label>Country</label> :
+                              <label className="error">{countryError}</label>)
+                            }
+                            placeholder="Country"
+                            value={country}
+                            error={countryError}
+                            type="text"
+                            onChange={handleInput('country')}
+                          />
+                        </Region>
+                        <Company>
+                          <Input
+                            label={
+                              (companyNameError === '' ? <label>Company Name</label> :
+                              <label className="error">{companyNameError}</label>)
+                            }
+                            placeholder="Company"
+                            value={companyName}
+                            error={companyNameError}
+                            type="text"
+                            onChange={handleInput('company')}
+                          />
+                          <Input
+                            label={
+                              (ceoError === '' ? <label>CEO / Owner</label> :
+                              <label className="error">{ceoError}</label>)
+                            }
+                            placeholder="CEO / Owner"
+                            value={ceo}
+                            error={ceoError}
+                            type="text"
+                            onChange={handleInput('ceo')}
+                          />
+                        </Company>
+                        <Company>
+                          <Input
+                            label={
+                              (webError === '' ? <label>Website</label> :
+                              <label className="error">{webError}</label>)
+                            }
+                            placeholder="Website"
+                            value={web}
+                            error={webError}
+                            type="text"
+                            onChange={handleInput('web')}
+                          />
+                          <Input
+                            label={
+                              (telephoneError === '' ? <label>Telephone Clinic</label> :
+                              <label className="error">{telephoneError}</label>)
+                            }
+                            placeholder="Telephone Clinic"
+                            value={telephone}
+                            error={telephoneError}
+                            type="text"
+                            onChange={handleInput('telephone')}
+                          />
+                        </Company>
+                      </Form>
+                      <Subtitle>
+                        <h4>Banking</h4>
+                        <div>
+                          <span>
+                            <b><i className='la la-pencil'></i></b>
+                            Edit
+                          </span>
+                        </div>
+                      </Subtitle>
+                      <Form>
+                        <Banking>
+                          <Input
+                            label={
+                              (banknameError === '' ? <label>Bankname</label> :
+                              <label className="error">{banknameError}</label>)
+                            }
+                            placeholder="Bankname"
+                            value={bankname}
+                            error={banknameError}
+                            type="text"
+                            onChange={handleInput('bankname')}
+                          />
+                          <Input
+                            label={
+                              (ibanError === '' ? <label>IBAN</label> :
+                              <label className="error">{ibanError}</label>)
+                            }
+                            placeholder="IBAN"
+                            value={iban}
+                            error={ibanError}
+                            type="text"
+                            onChange={handleInput('iban')}
+                          />
+                        </Banking>
+                        <Banking>
+                          <Input
+                            label={
+                              (bicError === '' ? <label>BIC</label> :
+                              <label className="error">{bicError}</label>)
+                            }
+                            placeholder="BIC"
+                            value={bic}
+                            error={bicError}
+                            type="text"
+                            onChange={handleInput('bic')}
+                          />
+                          <Input
+                            label={
+                              (accountHoldlerError === '' ? <label>Account Holdler</label> :
+                              <label className="error">{accountHoldlerError}</label>)
+                            }
+                            placeholder="Account Holdler"
+                            value={accountHoldler}
+                            error={accountHoldlerError}
+                            type="text"
+                            onChange={handleInput('accountHoldler')}
+                          />
+                        </Banking>
+                      </Form>
+                    </General>
+                  )
+                }
               </Box>
             </>
           }
@@ -541,21 +863,26 @@ const Detail = observer(() => {
         <Attachment>
           <h4>Attachment</h4>
           {
-            staff.temporaryFiles.length > 0 &&
+            temporaryFiles.length > 0 &&
             <ul>
-              {staff.temporaryFiles.map((a, index) => {
+              {temporaryFiles.map((a, index) => {
                 return(
                   <li key={index}>
                     <i className="las la-file-alt"></i>
                     <div>
                       <span>{a.name}</span>
-                      <span>{
-                          Object.keys(a.progress).length > 0 ?
+                      <span>
+                        {
+                          (Object.keys(a).includes('progress') && 
+                          Object.keys(a.progress).length > 0) ?
                           `${readablizeBytes(a.progress.loaded)} / ${readablizeBytes(a.size)} ${Math.round((a.progress.loaded * 100) / a.progress.total)}%` :
                           `${readablizeBytes(a.size)}`
                         }
                       </span>
-                      <i>x</i>
+                      {
+                        Object.keys(a).includes('created_at') && 
+                        <i onClick={confirmDeleteFile(a.id)}>x</i>
+                      }
                     </div>
                   </li>
                 )
@@ -566,14 +893,17 @@ const Detail = observer(() => {
             <span>Pilih file</span>
           </Dropzone>
           <Button
-            // onClick={handleUploadFile(staff)}
+            onClick={() => {
+              setShowModalAttachment(false)
+              getStaffsDetail(slug)
+            }}
             color={activeColor}
             background={activeBackground}
             customLoading={true}
             loadingChildren={
               <span>10%</span>
             }
-            loading={staff.formFileLoading}
+            loading={formFileLoading}
             borderColor={activeBackground}>
             <b>Upload file</b>
           </Button>

@@ -58,10 +58,6 @@ const detailTabStaff = [
   {
     slug: 'documents',
     label: 'Documents'
-  },
-  {
-    slug: 'export',
-    label: 'Export'
   }
 ]
 

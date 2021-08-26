@@ -25,7 +25,7 @@ Rails.application.routes.draw do
   #general scope api
   namespace :api do
     namespace :v1 do
-      resources :attachments, only: %i[create] do
+      resources :attachments, only: %i[create destroy] do
         member do
           get 'list', to: 'attachments#list'
         end        
@@ -44,6 +44,13 @@ Rails.application.routes.draw do
             put 'update', to: 'staffs#update'
           end
         end
+
+        resources :clinic_structures, only: %i[] do
+          member do
+            put 'update', to: 'clinic_structures#update'
+          end
+        end
+
       end
 
     end

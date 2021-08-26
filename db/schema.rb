@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_12_235339) do
+ActiveRecord::Schema.define(version: 2021_08_25_000648) do
 
   create_table "addresses", charset: "utf8mb4", collation: "utf8mb4_bin", force: :cascade do |t|
     t.text "streetname"
@@ -44,6 +44,15 @@ ActiveRecord::Schema.define(version: 2021_08_12_235339) do
     t.index ["superadmin_id"], name: "index_attachments_on_superadmin_id"
   end
 
+  create_table "bank_accounts", charset: "utf8mb4", collation: "utf8mb4_bin", force: :cascade do |t|
+    t.string "bankname"
+    t.string "iban"
+    t.string "bic"
+    t.string "account_holdler"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "banks", charset: "utf8mb4", collation: "utf8mb4_bin", force: :cascade do |t|
     t.text "bankname"
     t.text "iban"
@@ -68,6 +77,28 @@ ActiveRecord::Schema.define(version: 2021_08_12_235339) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["email"], name: "index_clients_on_email", unique: true
     t.index ["reset_password_token"], name: "index_clients_on_reset_password_token", unique: true
+  end
+
+  create_table "clinic_structures", charset: "utf8mb4", collation: "utf8mb4_bin", force: :cascade do |t|
+    t.bigint "bank_account_id"
+    t.bigint "superadmin_id"
+    t.bigint "staff_id"
+    t.bigint "employee_state_id"
+    t.text "streetname"
+    t.text "streetnumber"
+    t.text "zip_code"
+    t.text "region"
+    t.text "country"
+    t.text "company_name"
+    t.text "ceo_owner"
+    t.text "website"
+    t.text "phone_clinic"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["bank_account_id"], name: "index_clinic_structures_on_bank_account_id"
+    t.index ["employee_state_id"], name: "index_clinic_structures_on_employee_state_id"
+    t.index ["staff_id"], name: "index_clinic_structures_on_staff_id"
+    t.index ["superadmin_id"], name: "index_clinic_structures_on_superadmin_id"
   end
 
   create_table "content_departments", charset: "utf8mb4", collation: "utf8mb4_bin", force: :cascade do |t|
@@ -106,6 +137,14 @@ ActiveRecord::Schema.define(version: 2021_08_12_235339) do
   create_table "departments", charset: "utf8mb4", collation: "utf8mb4_bin", force: :cascade do |t|
     t.text "name"
     t.text "slug"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "employee_states", charset: "utf8mb4", collation: "utf8mb4_bin", force: :cascade do |t|
+    t.datetime "entry"
+    t.datetime "exit"
+    t.datetime "contract"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end

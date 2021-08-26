@@ -197,8 +197,11 @@ const Title = styled.div`
   }
   > a{
     display: inline-flex;
+    align-items: center;
     margin-left: auto;
+    color: #4b988b;
     > b{
+      margin-right: 5px;
       color: #4b988b;
       width: 15px;
       height: 15px;
@@ -246,7 +249,7 @@ const Index = observer(() => {
         <Content>
           <Title>
             <h4><b>All</b></h4>
-            <Link to={`/${role}/staffs/new`}><b>+</b></Link>
+            <Link to={`/${role}/staffs/new`}><b>+</b>Add staff</Link>
           </Title>
           {staff.index.map((any, index) => {
             return(

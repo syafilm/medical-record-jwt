@@ -11,6 +11,9 @@ const Wrapper = styled.div`
   border-right: 1px solid #d7e1e7;
   display: flex;
   flex-direction: column;
+  position: fixed;
+  z-index: 111;
+  left: 0;
   > h4{
     font-family: 'OpenSans Bold';
     padding: 0px 20px;

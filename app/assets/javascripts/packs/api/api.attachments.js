@@ -9,9 +9,14 @@ function list(id, type){
   return basic().get(`attachments/${id}/list?type=${type}`)
 }
 
+function destroy(id){
+  return basic().delete(`attachments/${id}`)
+}
+
 const Attachments = {
   create,
-  list
+  list,
+  destroy
 }
 
 export default Attachments
