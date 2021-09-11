@@ -103,21 +103,23 @@ const Login = observer(() => {
   });
 
   const loginRef = React.useRef(null)
+  const loginFormRef = React.useRef(null)
   const formToCheck = ['email', 'password']
 
   const handleInput = (type) => (e) => {
     const { value } = e.target
     setLogin(prev => ({...prev,
       [type]: value,
-      [`${type}Error`]: type === 'email' ? (Validation.checkExist(value, type) === '' ? Validation.checkEmail(value, type) : Validation.checkExist(value, type)) 
-        : Validation.checkExist(value, type)
+      [`${type}Error`]: type === 'email' ? (Validation.checkExist(value, type, true) === '' ? 
+        Validation.checkEmail(value, type) : Validation.checkExist(value, type, true)) 
+        : Validation.checkExist(value, type, true)
     }))
   }
 
   const checkForm = async(login) => {
     formToCheck.map(any => {
       setLogin(prev =>
-        ({...prev, [`${any}Error`]: Validation.checkExist(login[any], any)
+        ({...prev, [`${any}Error`]: Validation.checkExist(login[any], any, true)
       }))
     })
   }
@@ -132,6 +134,21 @@ const Login = observer(() => {
     })
   }
 
+  const handleKeyupInput = React.useCallback(event => {
+    if (event.code === 'Enter') {
+      // invoke submit login
+      submitLogin(login)()
+    }
+  }, [login]);
+
+  React.useEffect(() => {
+    const div = loginFormRef.current;
+    div.addEventListener("keyup", handleKeyupInput);
+    return () => {
+      div.removeEventListener("keyup", handleKeyupInput);
+    }
+  }, [handleKeyupInput])
+
   // ref for checking error
   loginRef.current = formToCheck.filter(any => login[`${any}Error`]).length
 
@@ -139,7 +156,7 @@ const Login = observer(() => {
     <Wrapper>
       <Container>
         <Content>
-          <Box>
+          <Box ref={loginFormRef}>
             {/* <h3><b>Login as staff</b></h3> */}
             <Button className="google">
               <img src={google}/>

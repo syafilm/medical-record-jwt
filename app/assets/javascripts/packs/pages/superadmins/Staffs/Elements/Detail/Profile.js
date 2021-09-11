@@ -13,8 +13,32 @@ const Content = styled.div`
   > div{
     display: flex;
     flex-direction: column;
-    > h3{
-      font-family: 'OpenSans Bold';
+    width: 100%;
+    > div{
+      display:flex;
+      align-items: center;
+      width: 100%;
+      > h3{
+        font-family: 'OpenSans Bold';
+      }
+      > b{
+        margin-left: auto;
+        font-weight: normal;
+        font-family: 'OpenSans Regular';
+        cursor: pointer;
+        color: #4b988b;
+        > span{
+          background: #ECF1F4;
+          width: 35px;
+          height: 35px;
+          display: inline-flex;
+          justify-content: center;
+          align-items: center;
+          border-radius: 5px;
+          font-size: 20px;
+          margin-right: 10px;
+        }
+      }
     }
     > span{
       font-size: 14px;
@@ -28,7 +52,7 @@ const Avatar = styled.img`
   height: 150px;
   border-radius: 5px;
   object-fit: cover;
-  object-position: cover;
+  object-position: center;
   position: relative;
   margin-right: 10px;
 `
@@ -67,7 +91,15 @@ const Profile = ({
       <Content>
         <Avatar src={detail.avatar.url}/>
         <div>
-          <h3>{detail.name}</h3>
+          <div>
+            <h3>{detail.name}</h3>
+            <b>
+              <span>
+                <i className="las la-file-export"></i>
+              </span>
+              Export data
+            </b>
+          </div>
           <span>{detail.email}</span>
           <Information>
             <ul>

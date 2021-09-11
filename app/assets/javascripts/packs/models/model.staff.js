@@ -15,7 +15,6 @@ function params(obj) {
 
   Object.keys(data).map((key) => {
     if (key === 'files') {
-      debugger
       return (
         Array.from(data.files).map(f => form.append('staff[files][]', f))
       )

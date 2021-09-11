@@ -252,15 +252,16 @@ const New = observer(() => {
     setStaff(prev => ({
       ...prev,
       [type]: value,
-      [`${type}Error`]: type === 'email' ? (Validation.checkExist(value, type) === '' ? Validation.checkEmail(value, type) : Validation.checkExist(value, type)) 
-      : Validation.checkExist(value, type)
+      [`${type}Error`]: type === 'email' ? (Validation.checkExist(value, type, true) === '' ? 
+        Validation.checkEmail(value, type) : Validation.checkExist(value, type, true)) 
+      : Validation.checkExist(value, type, true)
     }))
   }
 
   const handleInputSelect = (type) => (newValue) => {
     setStaff(prev => ({
       ...prev, [type]: newValue,
-      [`${type}Error`]: Validation.checkExist(newValue, type)
+      [`${type}Error`]: Validation.checkExist(newValue, type, true)
     }))
   }
 
@@ -277,7 +278,7 @@ const New = observer(() => {
   const checkForm = async(staff) => {
     formToCheck.map(any => {
       setStaff(prev =>
-        ({...prev, [`${any}Error`]: Validation.checkExist(staff[any], any)
+        ({...prev, [`${any}Error`]: Validation.checkExist(staff[any], any, true)
       }))
     })
   }

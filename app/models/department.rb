@@ -2,10 +2,10 @@ class Department < ApplicationRecord
   before_save :downcase_name
   after_validation :set_slug, only: [:create, :update]
 
-  has_many :content_departments
-  has_many :staffs, through: :content_departments
+  has_one :content_department
+  has_one :staff, through: :content_department
 
-  validates_uniqueness_of :name
+  validates_uniqueness_of :slug
 
   private
     def downcase_name

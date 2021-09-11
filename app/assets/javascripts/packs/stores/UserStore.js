@@ -13,9 +13,7 @@ class UserStore {
     authenticated: false,
     loading: true,
     loadingForm: false,
-    detail: {
-
-    },
+    detail: {},
     activeColor: '',
     activeBackground: '',
     role: '',
@@ -53,6 +51,8 @@ class UserStore {
 
   @action
     createRegister = async(register) => {
+      this.user.loadingForm = true
+      this.user.state = 'loading'
       let objectToSend = {}
       if(this.user.role === 'staff'){
         objectToSend = ModelStaff.params(register)
@@ -62,8 +62,12 @@ class UserStore {
 
       try {
         const {data} = await ApiRegisters.create(objectToSend)
+        this.user.state = 'success'
+        this.user.loadingForm = false
         console.log(data, 'success')
       } catch (e) {
+        this.user.state = 'failed'
+        this.user.loadingForm = false
         console.log(e)
       }
     }

@@ -153,18 +153,18 @@ const Information = ({
       <Section>
         <div>
           <h4>About</h4>
-          <span>I'm {staff.detail.name}, a software developer with a Computer Science degree from Brown University. In the past I've worked as an intern for Microsoft and Pixar developing in C++. Most of my personal work revolves around web development and graphics. This site is where I put my side projects when I finish them.</span>
+          <span>I'm {staff.detail.name}, a software developer with a Computer Science degree from Binus University. In the past I've worked as an intern for presidential office staff developing in PHP and Javascript. Most of my personal work revolves around web development and graphics. This site is where I put my side projects when I finish them.</span>
         </div>
         <div>
           <h4>Attachment</h4>
           <ul className="attachment">
-            {staff.files.map(a => {
+            {staff.attachments.map(a => {
               return <li key={a.id}>
                 <i className="las la-file-alt"></i>
                 <div>
                   <span>{a.name}</span>
                   <span>{readablizeBytes(a.size)}</span>
-                  <i onClick={confirmDeleteFile(a.id)}>x</i>
+                  <i onClick={confirmDeleteFile(a.id, 'attachment')}>x</i>
                 </div>
               </li>
             })}

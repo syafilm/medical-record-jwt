@@ -1,4 +1,4 @@
-function checkExist(value, label) {
+function checkExist(value, label = '', withLabel = false) {
   let isValid
   if (/^\s*$/.test(value)) {
     isValid = false
@@ -10,7 +10,12 @@ function checkExist(value, label) {
     isValid = !!value
   }
 
-  return isValid ? '' : `${label} must be filled in`
+
+  if(withLabel){
+    return isValid ? '' : `${label} must be filled in`
+  }
+
+  return isValid
 }
 
 function checkEmail(value, label) {

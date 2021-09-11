@@ -4,7 +4,6 @@ module Api
       class RegistrationsController < Devise::RegistrationsController
         def create
           superadmin = Superadmin.new(sign_up_params)
-          binding.pry
         
           if superadmin.save
           token = superadmin.generate_jwt

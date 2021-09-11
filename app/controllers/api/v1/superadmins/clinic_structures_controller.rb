@@ -5,26 +5,21 @@ module Api
         before_action :authenticate_superadmin!
 
         def update
-          id = params['id']
-          # superadmin = current_superadmin
-          # superadmin_id = superadmin.present? ? superadmin.id : ''
-          # staff = Staff.find_by(id: id)
-          # @staff = StaffsService.new(superadmin, staff_params).object_create(staff)
+          staff_id = params['id']
+          clinic_structure = ClinicStructure.find_by(staff_id: staff_id)
+          superadmin = current_superadmin
+          superadmin_id = superadmin.present? ? superadmin.id : ''
+          @clinic_structure = ClinicStructuresService.new(superadmin, clinic_structure_params).object_create(clinic_structure)
 
-          # if @staff.save
-          #   sync_tags(id, staff_params[:tag_arr]) if staff_params[:tag_arr].present?
-          #   sync_qualifications(id, staff_params[:qualification_arr]) if staff_params[:qualification_arr].present?
-          # end
-
-          # render json: @staff
+          if @clinic_structure.save
+            render json: @clinic_structure
+          end
         end
 
         def detail
-          id = params['id']
-          # superadmin = current_superadmin
-          # superadmin_id = superadmin.present? ? superadmin.id : ''
-          # @staff = Staff.find_by(id: id)
-          # render json: @staff
+          staff_id = params['id']
+          @clinic_structure = ClinicStructure.find_by(staff_id: staff_id)
+          render json: @clinic_structure, status: :ok
         end
 
         private

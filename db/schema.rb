@@ -10,58 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_25_000648) do
-
-  create_table "addresses", charset: "utf8mb4", collation: "utf8mb4_bin", force: :cascade do |t|
-    t.text "streetname"
-    t.integer "streetnumber"
-    t.integer "zip_code"
-    t.text "region"
-    t.text "country"
-    t.bigint "staff_id"
-    t.bigint "client_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["client_id"], name: "index_addresses_on_client_id"
-    t.index ["staff_id"], name: "index_addresses_on_staff_id"
-  end
-
-  create_table "attachments", charset: "utf8mb4", collation: "utf8mb4_bin", force: :cascade do |t|
-    t.string "file"
-    t.string "name"
-    t.integer "size"
-    t.string "description"
-    t.string "model_type"
-    t.integer "model_id"
-    t.bigint "superadmin_id"
-    t.bigint "client_id"
-    t.bigint "staff_id"
-    t.text "uuid"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["client_id"], name: "index_attachments_on_client_id"
-    t.index ["staff_id"], name: "index_attachments_on_staff_id"
-    t.index ["superadmin_id"], name: "index_attachments_on_superadmin_id"
-  end
+ActiveRecord::Schema.define(version: 2021_09_08_013419) do
 
   create_table "bank_accounts", charset: "utf8mb4", collation: "utf8mb4_bin", force: :cascade do |t|
     t.string "bankname"
     t.string "iban"
     t.string "bic"
-    t.string "account_holdler"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-  end
-
-  create_table "banks", charset: "utf8mb4", collation: "utf8mb4_bin", force: :cascade do |t|
-    t.text "bankname"
-    t.text "iban"
-    t.text "bic"
-    t.text "account_holder"
+    t.string "account_holder"
+    t.bigint "superadmin_id"
     t.bigint "staff_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["staff_id"], name: "index_banks_on_staff_id"
+    t.index ["staff_id"], name: "index_bank_accounts_on_staff_id"
+    t.index ["superadmin_id"], name: "index_bank_accounts_on_superadmin_id"
   end
 
   create_table "clients", charset: "utf8mb4", collation: "utf8mb4_bin", force: :cascade do |t|
@@ -82,7 +43,7 @@ ActiveRecord::Schema.define(version: 2021_08_25_000648) do
   create_table "clinic_structures", charset: "utf8mb4", collation: "utf8mb4_bin", force: :cascade do |t|
     t.bigint "bank_account_id"
     t.bigint "superadmin_id"
-    t.bigint "staff_id"
+    t.bigint "client_id"
     t.bigint "employee_state_id"
     t.text "streetname"
     t.text "streetnumber"
@@ -96,8 +57,8 @@ ActiveRecord::Schema.define(version: 2021_08_25_000648) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["bank_account_id"], name: "index_clinic_structures_on_bank_account_id"
+    t.index ["client_id"], name: "index_clinic_structures_on_client_id"
     t.index ["employee_state_id"], name: "index_clinic_structures_on_employee_state_id"
-    t.index ["staff_id"], name: "index_clinic_structures_on_staff_id"
     t.index ["superadmin_id"], name: "index_clinic_structures_on_superadmin_id"
   end
 
@@ -135,25 +96,51 @@ ActiveRecord::Schema.define(version: 2021_08_25_000648) do
   end
 
   create_table "departments", charset: "utf8mb4", collation: "utf8mb4_bin", force: :cascade do |t|
-    t.text "name"
-    t.text "slug"
+    t.string "name", default: "", null: false
+    t.string "slug", default: "", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["slug"], name: "index_departments_on_slug", unique: true
+  end
+
+  create_table "documents", charset: "utf8mb4", collation: "utf8mb4_bin", force: :cascade do |t|
+    t.string "file"
+    t.string "name"
+    t.integer "size"
+    t.string "description"
+    t.string "model_type"
+    t.integer "model_id"
+    t.bigint "superadmin_id"
+    t.bigint "client_id"
+    t.bigint "staff_id"
+    t.text "uuid"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "extension"
+    t.string "upload_type"
+    t.index ["client_id"], name: "index_documents_on_client_id"
+    t.index ["staff_id"], name: "index_documents_on_staff_id"
+    t.index ["superadmin_id"], name: "index_documents_on_superadmin_id"
   end
 
   create_table "employee_states", charset: "utf8mb4", collation: "utf8mb4_bin", force: :cascade do |t|
     t.datetime "entry"
     t.datetime "exit"
     t.datetime "contract"
+    t.bigint "superadmin_id"
+    t.bigint "staff_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["staff_id"], name: "index_employee_states_on_staff_id"
+    t.index ["superadmin_id"], name: "index_employee_states_on_superadmin_id"
   end
 
   create_table "qualifications", charset: "utf8mb4", collation: "utf8mb4_bin", force: :cascade do |t|
-    t.text "name"
-    t.text "slug"
+    t.string "name", default: "", null: false
+    t.string "slug", default: "", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["slug"], name: "index_qualifications_on_slug", unique: true
   end
 
   create_table "staffs", charset: "utf8mb4", collation: "utf8mb4_bin", force: :cascade do |t|
@@ -164,6 +151,11 @@ ActiveRecord::Schema.define(version: 2021_08_25_000648) do
     t.text "stf"
     t.text "name"
     t.text "surname"
+    t.text "streetname"
+    t.text "streetnumber"
+    t.text "zip_code"
+    t.text "region"
+    t.text "country"
     t.text "phone"
     t.bigint "superadmin_id"
     t.text "last_despatch"
@@ -190,10 +182,21 @@ ActiveRecord::Schema.define(version: 2021_08_25_000648) do
   end
 
   create_table "tags", charset: "utf8mb4", collation: "utf8mb4_bin", force: :cascade do |t|
-    t.text "name"
-    t.text "slug"
+    t.string "name", default: "", null: false
+    t.string "slug", default: "", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["slug"], name: "index_tags_on_slug", unique: true
+  end
+
+  create_table "versions", charset: "utf8mb4", force: :cascade do |t|
+    t.string "item_type", limit: 191, null: false
+    t.bigint "item_id", null: false
+    t.string "event", null: false
+    t.string "whodunnit"
+    t.text "object", size: :long
+    t.datetime "created_at"
+    t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
   end
 
   create_table "workplaces", charset: "utf8mb4", collation: "utf8mb4_bin", force: :cascade do |t|

@@ -93,7 +93,7 @@ const Login = styled.span`
 const Register = observer(() => {
   const store = useStore()
   const { user, createRegister } = store.user
-  const { activeColor, activeBackground } = user
+  const { activeColor, activeBackground, loadingForm } = user
   const { slug } = useParams()
   const [register, setRegister] = React.useState({
     email: '',
@@ -103,21 +103,23 @@ const Register = observer(() => {
   });
   
   const registerRef = React.useRef(null)
+  const registerFormRef = React.useRef(null)
   const formToCheck = ['email', 'password']
 
   const handleInput = (type) => (e) => {
     const { value } = e.target
     setRegister(prev => ({...prev,
       [type]: value,
-      [`${type}Error`]: type === 'email' ? (Validation.checkExist(value, type) === '' ? Validation.checkEmail(value, type) : Validation.checkExist(value, type)) 
-        : Validation.checkExist(value, type)
+      [`${type}Error`]: type === 'email' ? (Validation.checkExist(value, type, true) === '' ? 
+        Validation.checkEmail(value, type) : Validation.checkExist(value, type, true)) 
+        : Validation.checkExist(value, type, true)
     }))
   }
 
-  const checkForm = async(register) =>{
+  const checkForm = async(register) => {
     formToCheck.map(any => {
       setRegister(prev =>
-        ({...prev, [`${any}Error`]: Validation.checkExist(register[any], any)
+        ({...prev, [`${any}Error`]: Validation.checkExist(register[any], any, true)
       }))
     })
   }
@@ -132,6 +134,21 @@ const Register = observer(() => {
     })
   }
 
+  const handleKeyupInput = React.useCallback(event => {
+    if (event.code === 'Enter') {
+      // invoke submit register
+      submitRegister(register)()
+    }
+  }, [register]);
+
+  React.useEffect(() => {
+    const div = registerFormRef.current;
+    div.addEventListener("keyup", handleKeyupInput);
+    return () => {
+      div.removeEventListener("keyup", handleKeyupInput);
+    }
+  }, [handleKeyupInput])
+
   // ref for checking error
   registerRef.current = formToCheck.filter(any => register[`${any}Error`]).length
 
@@ -139,7 +156,7 @@ const Register = observer(() => {
     <Wrapper>
       <Container>
         <Content>
-          <Box>
+          <Box ref={registerFormRef}>
             {/* <h3><b>Login as staff</b></h3> */}
             <Button className="google">
               <img src={google}/>
@@ -176,7 +193,8 @@ const Register = observer(() => {
             <Button
               onClick={submitRegister(register)}
               color={activeColor}
-              background={activeBackground} 
+              background={activeBackground}
+              loading={loadingForm}
               borderColor={activeBackground}>
               <b>  
                 Register

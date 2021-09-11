@@ -4,7 +4,9 @@ class CreateBankAccounts < ActiveRecord::Migration[6.1]
       t.string     :bankname
       t.string     :iban
       t.string     :bic
-      t.string     :account_holdler
+      t.string     :account_holder
+      t.belongs_to :superadmin
+      t.belongs_to :staff
       t.timestamps
     end
   end

@@ -13,6 +13,11 @@ class DeviseCreateStaffs < ActiveRecord::Migration[6.1]
       t.text :stf, unique: true
       t.text :name
       t.text :surname
+      t.text :streetname
+      t.text :streetnumber
+      t.text :zip_code
+      t.text :region
+      t.text :country
       t.text :phone
       t.belongs_to :superadmin
       t.text :last_despatch

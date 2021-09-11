@@ -3,7 +3,7 @@ class CreateClinicStructures < ActiveRecord::Migration[6.1]
     create_table :clinic_structures do |t|
       t.belongs_to :bank_account
       t.belongs_to :superadmin
-      t.belongs_to :staff
+      t.belongs_to :client
       t.belongs_to :employee_state
       t.text       :streetname
       t.text       :streetnumber

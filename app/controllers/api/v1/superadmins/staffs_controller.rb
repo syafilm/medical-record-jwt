@@ -20,9 +20,15 @@ module Api
           superadmin = current_superadmin
           staff = StaffsService.new(superadmin, new_params).perform_create
           if staff.save
-            clinic_structure_params = {staff_id: staff.id}
-            clinic_structure = ClinicStructuresService.new(superadmin, clinic_structure_params).perform_create
-            clinic_structure.save
+            #this code is for client actually
+            # clinic_structure_params = {
+            #   staff_id: staff.id,
+            #   employee_state_id: employee_state.id,
+            #   bank_account_id: bank_account.id
+            # }
+
+            # clinic_structure = ClinicStructuresService.new(superadmin, clinic_structure_params).perform_create
+            # clinic_structure.save
             if staff_params[:tag_arr].present?
               staff.sync_tags(staff_params[:tag_arr], []) 
             end
@@ -85,6 +91,11 @@ module Api
               :phone,
               :department,
               :avatar,
+              :streetname,
+              :streetnumber,
+              :zip_code,
+              :region,
+              :country,
               files: [],
               tag_arr: [],
               qualification_arr: []

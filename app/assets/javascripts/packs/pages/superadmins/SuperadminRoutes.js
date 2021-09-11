@@ -4,6 +4,7 @@ const Index = React.lazy(() => import('./Index'))
 const StaffsNew = React.lazy(() => import('./Staffs/New'))
 const StaffsIndex = React.lazy(() => import('./Staffs/Index'))
 const StaffsDetail = React.lazy(() => import('./Staffs/Detail'))
+const ClientsIndex = React.lazy(() => import('./Clients/Index'))
 
 const SuperadminRoutes = [
     {
@@ -32,6 +33,13 @@ const SuperadminRoutes = [
       exact: true,
       component: StaffsDetail,
       title: `Create staff`,
+      closeEnv: [],
+    },
+    {
+      path: `/superadmin/clients`,
+      exact: true,
+      component: ClientsIndex,
+      title: `Index List Clients`,
       closeEnv: [],
     }
   ]

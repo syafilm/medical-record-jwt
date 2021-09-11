@@ -25,10 +25,10 @@ Rails.application.routes.draw do
   #general scope api
   namespace :api do
     namespace :v1 do
-      resources :attachments, only: %i[create destroy] do
+      resources :documents, only: %i[create destroy] do
         member do
-          get 'list', to: 'attachments#list'
-        end        
+          get 'list', to: 'documents#list'
+        end
       end
 
       resources :users, only: %i[] do
@@ -45,9 +45,42 @@ Rails.application.routes.draw do
           end
         end
 
+        resources :tags, only: %i[] do
+          collection do
+            get 'list', to: 'tags#list'
+          end
+        end
+
+        resources :qualifications, only: %i[] do
+          collection do
+            get 'list', to: 'qualifications#list'
+          end
+        end
+
+        resources :departments, only: %i[] do
+          collection do
+            get 'list', to: 'departments#list'
+          end
+        end
+
         resources :clinic_structures, only: %i[] do
           member do
             put 'update', to: 'clinic_structures#update'
+            get 'detail', to: 'clinic_structures#detail'
+          end
+        end
+        
+        resources :employee_states, only: %i[] do
+          member do
+            put 'update', to: 'employee_states#update'
+            get 'detail', to: 'employee_states#detail'
+          end
+        end
+
+        resources :bank_accounts, only: %i[] do
+          member do
+            put 'update', to: 'bank_accounts#update'
+            get 'detail', to: 'bank_accounts#detail'
           end
         end
 

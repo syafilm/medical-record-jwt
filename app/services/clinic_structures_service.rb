@@ -1,6 +1,5 @@
 class ClinicStructuresService
   def initialize(superadmin, params)
-    binding.pry
     @superadmin = superadmin
     @bank_account_id = params[:bank_account_id]
     @staff_id = params[:staff_id]
@@ -37,7 +36,7 @@ class ClinicStructuresService
   def object_create(clinic_structure)
     clinic_structure.bank_account_id = @bank_account_id if @bank_account_id.present?
     clinic_structure.staff_id = @staff_id if @staff_id.present?
-    clinic_structure.superadmin_id = @superadmin_id if @superadmin_id.present?
+    clinic_structure.superadmin_id = @superadmin.id if @superadmin.present?
     clinic_structure.employee_state_id = @employee_state_id if @employee_state_id.present?
     clinic_structure.streetname = @streetname if @streetname.present?
     clinic_structure.streetnumber = @streetnumber if @streetnumber.present?

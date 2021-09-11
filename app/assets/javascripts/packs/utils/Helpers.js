@@ -24,6 +24,16 @@ function readablizeBytes(bytes){
   return `${(bytes / Math.pow(1024, estimation)).toFixed(2)} ${size[estimation]}`
 }
 
+function camelToSnakeCase(text) {
+  return text.replace(/(.)([A-Z][a-z]+)/, '$1_$2').replace(/([a-z0-9])([A-Z])/, '$1_$2').toLowerCase()
+}
+
+function snakeToCamelCase(text){
+  return text.replace(/(_\w)/g, k => k[1].toUpperCase())
+}
+
+
+
 const sidebarMenu = [
   {
     slug: 'staffs',
@@ -31,7 +41,7 @@ const sidebarMenu = [
     icon: 'las la-user-tag'
   },
   {
-    slug: 'client',
+    slug: 'clients',
     label: 'Clients',
     icon: 'las la-user-friends'
   },
@@ -52,12 +62,16 @@ const detailTabStaff = [
     label: 'General'
   },
   {
-    slug: 'price-settings',
-    label: 'Price settings'
+    slug: 'timetracker',
+    label: 'Timetracker'
   },
   {
     slug: 'documents',
     label: 'Documents'
+  },
+  {
+    slug: 'tax',
+    label: 'Tax'
   }
 ]
 
@@ -67,6 +81,8 @@ const Helpers = {
   hexToRgb,
   readablizeBytes,
   detailTabStaff,
+  camelToSnakeCase,
+  snakeToCamelCase,
 }
 
 export default Helpers

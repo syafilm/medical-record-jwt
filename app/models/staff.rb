@@ -6,22 +6,13 @@ class Staff < ApplicationRecord
 
   paginates_per 12
 
-  after_save :prefix_alphabet, 
-             :create_address,
-             :create_bank
+  after_save :prefix_alphabet,
+             :create_employee_state,
+             :create_bank_account
 
   attr_accessor :tag_arr,
                 :qualification_arr,
                 :department
-                # :streetname,
-                # :streetnumber,
-                # :zip_code,
-                # :region,
-                # :country,
-                # :bankname,
-                # :iban,
-                # :bic,
-                # :account_holder
 
   has_many :content_tags, dependent: :destroy
   has_many :tags, through: :content_tags
@@ -30,11 +21,11 @@ class Staff < ApplicationRecord
   has_many :qualifications, through: :content_qualifications
   
   #this should be has one, but i still working on it
-  has_many :content_departments, dependent: :destroy
-  has_many :departments, through: :content_departments
-
-  has_one :address
-  has_one :bank
+  has_one  :content_department, dependent: :destroy
+  has_one  :department, through: :content_department
+  has_one  :clinic_structure, dependent: :destroy
+  has_one  :employee_state, dependent: :destroy
+  has_one  :bank_account, dependent: :destroy
 
   has_many :workplaces
          
@@ -53,7 +44,8 @@ class Staff < ApplicationRecord
   end
 
   def sync_department(department, old_department)
-    self.departments = [department].map { |any| Department.find_or_create_by(name: any)}
+    self.department = Department.find_or_create_by(name: department)
+    self.content_department = ContentDepartment.find_or_create_by(staff_id: self.id, department_id: self.department.id)
     
     if old_department.present?
       deparment_ids = Department.where(slug: old_department).collect(&:id)
@@ -75,15 +67,15 @@ class Staff < ApplicationRecord
       self.update_column(:stf, "stf-#{id}") # This will skip validation gracefully.
     end
 
-    def create_address
-      if self.address.blank?
-        Address.create(staff_id: id)
+    def create_employee_state
+      if self.employee_state.blank?
+        EmployeeState.create(superadmin_id: self.superadmin_id, staff_id: self.id)
       end
     end
 
-    def create_bank
-      if self.bank.blank?
-        Bank.create(staff_id: id)
+    def create_bank_account
+      if self.bank_account.blank?
+        BankAccount.create(superadmin_id: self.superadmin_id, staff_id: self.id)
       end
     end
 

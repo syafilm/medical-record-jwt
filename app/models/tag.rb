@@ -1,9 +1,9 @@
 class Tag < ApplicationRecord
   before_save :downcase_name
-  after_validation :set_slug, only: [:create, :update]
+  after_validation :set_slug
   has_many :content_tags
   has_many :staffs, through: :content_tags
-  validates_uniqueness_of :name
+  validates_uniqueness_of :slug
 
   private
     def downcase_name

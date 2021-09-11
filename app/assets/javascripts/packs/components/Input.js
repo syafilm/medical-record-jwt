@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react'
 import styled from '@emotion/styled'
+import {Validation} from 'utils'
 
 const Wrapper = styled.div`
   position: relative;
@@ -30,18 +31,21 @@ const Input = ({
   placeholder,
   error,
   className,
-}) => (
-  <Wrapper>
-    {label}
-    <Text 
-      onChange={onChange}
-      type={type}
-      value={value}
-      error={error}
-      className={className}
-      placeholder={placeholder}
-    />
-  </Wrapper>
-)
+}) => {
+  !Validation.checkExist(value) && value === null && console.log(label.props.children, 'label apa yang null')
+  return(
+    <Wrapper>
+      {label}
+      <Text 
+        onChange={onChange}
+        type={type}
+        value={value}
+        error={error}
+        className={className}
+        placeholder={placeholder}
+      />
+    </Wrapper>
+  )
+}
 
 export default Input
