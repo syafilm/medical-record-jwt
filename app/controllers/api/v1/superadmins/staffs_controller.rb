@@ -20,15 +20,6 @@ module Api
           superadmin = current_superadmin
           staff = StaffsService.new(superadmin, new_params).perform_create
           if staff.save
-            #this code is for client actually
-            # clinic_structure_params = {
-            #   staff_id: staff.id,
-            #   employee_state_id: employee_state.id,
-            #   bank_account_id: bank_account.id
-            # }
-
-            # clinic_structure = ClinicStructuresService.new(superadmin, clinic_structure_params).perform_create
-            # clinic_structure.save
             if staff_params[:tag_arr].present?
               staff.sync_tags(staff_params[:tag_arr], []) 
             end
@@ -47,8 +38,8 @@ module Api
           superadmin_id = superadmin.present? ? superadmin.id : ''
           staff = Staff.find_by(id: id)
           @staff = StaffsService.new(superadmin, staff_params).object_create(staff)
-
           if @staff.save
+            sync_department(id, staff_params[:department]) if staff_params[:department].present?
             sync_tags(id, staff_params[:tag_arr]) if staff_params[:tag_arr].present?
             sync_qualifications(id, staff_params[:qualification_arr]) if staff_params[:qualification_arr].present?
           end
@@ -83,6 +74,15 @@ module Api
             staff.sync_qualifications(qualification_arr, delete_qualification_slugs)
           end
 
+          def sync_department(id, department)
+            staff = Staff.find_by(id: id)
+            existing_department_ids = ContentDepartment.where(staff_id: id).collect(&:id)
+            department_slugs = Department.where(id: existing_department_ids).collect(&:slug)
+            department_slugs_new = [department].map{ |item| item.to_s.parameterize}
+            delete_department_slugs =  department_slugs.reject { |item| department_slugs_new.include? item}
+            staff.sync_department(department, delete_department_slugs)
+          end
+
           def staff_params
             params.require(:staff).permit(
               :name,
@@ -96,7 +96,6 @@ module Api
               :zip_code,
               :region,
               :country,
-              files: [],
               tag_arr: [],
               qualification_arr: []
             )

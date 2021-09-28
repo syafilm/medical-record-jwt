@@ -2,51 +2,45 @@ class ClinicStructuresService
   def initialize(superadmin, params)
     @superadmin = superadmin
     @bank_account_id = params[:bank_account_id]
-    @staff_id = params[:staff_id]
+    @client_id = params[:client_id]
     @employee_state_id = params[:employee_state_id]
-    @streetname = params[:streetname]
-    @streetnumber = params[:streetnumber]
-    @zip_code = params[:zip_code]
-    @region = params[:region]
-    @country = params[:country]
-    @company_name = params[:company_name]
-    @ceo_owner = params[:ceo_owner]
-    @website = params[:website]
-    @phone_clinic = params[:phone_clinic]
+    @clinic_address_id = params[:clinic_address_id]
+    @early_start = params[:early_start]
+    @early_end = params[:early_end]
+    @middle_start = params[:middle_start]
+    @middle_end = params[:middle_end]
+    @late_start = params[:late_start]
+    @late_end = params[:late_end]
   end
 
   def perform_create
     ClinicStructure.new(
       superadmin_id: @superadmin.id,
       bank_account_id: @bank_account_id,
-      staff_id: @staff_id,
+      client_id: @client_id,
       employee_state_id: @employee_state_id,
-      streetname: @streetname,
-      streetnumber: @streetnumber,
-      zip_code: @zip_code,
-      region: @region,
-      country: @country,
-      company_name: @company_name,
-      ceo_owner: @ceo_owner,
-      website: @website,
-      phone_clinic: @phone_clinic,
+      clinic_address_id: @clinic_address_id,
+      early_start: @early_start,
+      early_end: @early_end,
+      middle_start: @middle_start,
+      middle_end: @middle_end,
+      late_start: @late_start,
+      late_end: @late_end
     )
   end
 
   def object_create(clinic_structure)
     clinic_structure.bank_account_id = @bank_account_id if @bank_account_id.present?
-    clinic_structure.staff_id = @staff_id if @staff_id.present?
+    clinic_structure.client_id = @client_id if @client_id.present?
     clinic_structure.superadmin_id = @superadmin.id if @superadmin.present?
     clinic_structure.employee_state_id = @employee_state_id if @employee_state_id.present?
-    clinic_structure.streetname = @streetname if @streetname.present?
-    clinic_structure.streetnumber = @streetnumber if @streetnumber.present?
-    clinic_structure.zip_code = @zip_code if @zip_code.present?
-    clinic_structure.region = @region if @region.present?
-    clinic_structure.country = @country if @country.present?
-    clinic_structure.company_name = @company_name if @company_name.present?
-    clinic_structure.ceo_owner = @ceo_owner if @ceo_owner.present?
-    clinic_structure.website = @website if @website.present?
-    clinic_structure.phone_clinic = @phone_clinic if @phone_clinic.present?
+    clinic_structure.clinic_address_id = @clinic_address_id if @clinic_address_id.present?
+    clinic_structure.early_start = @early_start if @early_start.present?
+    clinic_structure.early_end = @early_end if @early_end.present?
+    clinic_structure.middle_start = @middle_start if @middle_start.present?
+    clinic_structure.middle_end = @middle_end if @middle_end.present?
+    clinic_structure.late_start = @late_start if @late_start.present?
+    clinic_structure.late_end = @late_end if @late_end.present?
     clinic_structure
-  end  
+  end
 end

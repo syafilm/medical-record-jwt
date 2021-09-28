@@ -1,0 +1,2 @@
+class PriceCondition < ApplicationRecord
+end

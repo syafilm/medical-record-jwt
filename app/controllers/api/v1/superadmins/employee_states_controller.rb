@@ -5,8 +5,8 @@ module Api
         before_action :authenticate_superadmin!
 
         def update
-          staff_id = params['id']
-          employee_state = EmployeeState.find_by(staff_id: staff_id)
+          id = params['id']
+          employee_state = EmployeeState.find_by(id: id)
           superadmin = current_superadmin
           superadmin_id = superadmin.present? ? superadmin.id : ''
           @employee_state = EmployeeStatesService.new(superadmin, employee_state_params).object_create(employee_state)
@@ -17,8 +17,8 @@ module Api
         end
 
         def detail
-          staff_id = params['id']
-          @employee_state = EmployeeState.find_by(staff_id: staff_id)
+          id = params['id']
+          @employee_state = EmployeeState.find_by(id: id)
           render json: @employee_state, status: :ok
         end
 

@@ -75,12 +75,33 @@ const detailTabStaff = [
   }
 ]
 
+
+const detailTabClient = [
+  {
+    slug: 'information',
+    label: 'Information'
+  },
+  {
+    slug: 'general',
+    label: 'General'
+  },
+  {
+    slug: 'price-settings',
+    label: 'Price Settings'
+  },
+  {
+    slug: 'documents',
+    label: 'Documents'
+  },
+]
+
 const Helpers = {
   capitalizeFirstLetter,
   sidebarMenu,
   hexToRgb,
   readablizeBytes,
   detailTabStaff,
+  detailTabClient,
   camelToSnakeCase,
   snakeToCamelCase,
 }

@@ -18,6 +18,19 @@ class SuperadminsController < ApplicationController
 
   end
 
+  #client function
+  def clients
+
+  end
+  
+  def clients_new
+    
+  end
+
+  def clients_detail
+
+  end
+
 
   def login
 

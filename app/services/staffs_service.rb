@@ -7,7 +7,6 @@ class StaffsService
     @surname = params[:surname]
     @password = params[:password]
     @avatar = params[:avatar]
-    @files = params[:files]
     @streetname = params[:streetname]
     @streetnumber = params[:streetnumber]
     @zip_code = params[:zip_code]
@@ -39,7 +38,6 @@ class StaffsService
     staff.name = @name if @name.present?
     staff.surname = @surname if @surname.present?
     staff.password = @password if @password.present?
-    staff.files = @files if @files.present?
     staff.streetname = @streetname if @streetname.present?
     staff.streetnumber = @streetnumber if @streetnumber.present?
     staff.zip_code = @zip_code if @zip_code.present?

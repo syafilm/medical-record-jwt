@@ -5,15 +5,13 @@ class CreateClinicStructures < ActiveRecord::Migration[6.1]
       t.belongs_to :superadmin
       t.belongs_to :client
       t.belongs_to :employee_state
-      t.text       :streetname
-      t.text       :streetnumber
-      t.text       :zip_code
-      t.text       :region
-      t.text       :country
-      t.text       :company_name
-      t.text       :ceo_owner
-      t.text       :website
-      t.text       :phone_clinic
+      t.belongs_to :clinic_address
+      t.string     :early_start
+      t.string     :early_end
+      t.string     :middle_start
+      t.string     :middle_end
+      t.string     :late_start
+      t.string     :late_end
       t.timestamps
     end
   end

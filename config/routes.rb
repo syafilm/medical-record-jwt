@@ -11,6 +11,9 @@ Rails.application.routes.draw do
   get '/superadmin/staffs', to: 'superadmins#staffs'
   get '/superadmin/staffs/new', to: 'superadmins#staffs_new'
   get '/superadmin/staffs/:slug', to: 'superadmins#staffs_detail'
+  get '/superadmin/clients', to: 'superadmins#clients'
+  get '/superadmin/clients/new', to: 'superadmins#clients_new'
+  get '/superadmin/clients/:slug', to: 'superadmins#clients_detail'
   
   #staff section
   get '/staff/login', to: 'staffs#login'
@@ -45,6 +48,13 @@ Rails.application.routes.draw do
           end
         end
 
+        resources :clients, only: %i[create index] do
+          member do
+            get 'detail', to: 'clients#detail'
+            put 'update', to: 'clients#update'
+          end
+        end
+
         resources :tags, only: %i[] do
           collection do
             get 'list', to: 'tags#list'
@@ -69,6 +79,13 @@ Rails.application.routes.draw do
             get 'detail', to: 'clinic_structures#detail'
           end
         end
+
+        resources :clinic_addresses, only: %i[] do
+          member do
+            put 'update', to: 'clinic_addresses#update'
+            get 'detail', to: 'clinic_addresses#detail'
+          end
+        end
         
         resources :employee_states, only: %i[] do
           member do
@@ -81,6 +98,16 @@ Rails.application.routes.draw do
           member do
             put 'update', to: 'bank_accounts#update'
             get 'detail', to: 'bank_accounts#detail'
+          end
+        end
+
+        resources :contacts, only: %i[] do
+          member do
+            put 'update', to: 'contacts#update'
+          end
+
+          collection do
+            get 'list', to: 'contacts#list'
           end
         end
 

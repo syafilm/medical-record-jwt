@@ -23,16 +23,10 @@ class Staff < ApplicationRecord
   #this should be has one, but i still working on it
   has_one  :content_department, dependent: :destroy
   has_one  :department, through: :content_department
-  has_one  :clinic_structure, dependent: :destroy
   has_one  :employee_state, dependent: :destroy
   has_one  :bank_account, dependent: :destroy
-
-  has_many :workplaces
          
   mount_uploader :avatar, AvatarUploader
-
-  mount_uploaders :files, FileUploader
-  serialize :files, JSON
 
   def sync_tags(arr, delete_arr)
     self.tags = arr.map { |any| Tag.find_or_create_by(name: any)}

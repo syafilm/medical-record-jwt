@@ -10,7 +10,6 @@ class StaffSerializer < ActiveModel::Serializer
              :created_at,
              :updated_at,
              :avatar,
-             :files,
              :streetname,
              :streetnumber,
              :zip_code, 
@@ -18,7 +17,9 @@ class StaffSerializer < ActiveModel::Serializer
              :country,
              :tag,
              :qualification,
-             :department
+             :department,
+             :bank_account,
+             :employee_state
 
   def tag
     object.tags.map{|a| { value: a.slug, label: a.name }}
@@ -29,11 +30,20 @@ class StaffSerializer < ActiveModel::Serializer
   end
 
   def department
-    data = object.content_department.department
-    {
-      value: data.slug,
-      label: data.name,
-    }
+    data = object.try(:content_department).try(:department)
+    if data.present?
+      { value: data.slug, label: data.name}
+    else
+      {}
+    end
+  end
+
+  def bank_account
+    BankAccount.find_by(staff_id: object.id)
+  end
+
+  def employee_state
+    EmployeeState.find_by(staff_id: object.id)
   end
 
 end

@@ -1,0 +1,2 @@
+class PriceSetting < ApplicationRecord
+end

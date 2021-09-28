@@ -118,7 +118,8 @@ const Index = observer(() => {
           This app allow you connect superadmin to client and staff directly with message feature, tracking time for the staff, and calculate the client cost
         </Footer>
         <Copy>
-          <span>Created by Syafil m</span>
+          <span>Created by&nbsp;<b>Syafil M</b>
+          </span>
         </Copy>
       </Container>
     </Wrapper>

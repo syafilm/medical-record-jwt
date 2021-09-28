@@ -7,6 +7,7 @@ class CreateBankAccounts < ActiveRecord::Migration[6.1]
       t.string     :account_holder
       t.belongs_to :superadmin
       t.belongs_to :staff
+      t.belongs_to :client
       t.timestamps
     end
   end

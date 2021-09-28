@@ -9,4 +9,12 @@ class Mailer < ActionMailer::Base
     mail to: @staff.email,
     subject: "Hello this is your default password"
   end
+
+  def send_default_password_client
+    @client = params[:client]
+    @default_password = params[:default_password]
+    
+    mail to: @client.email,
+    subject: "Hello this is your default password"
+  end
 end

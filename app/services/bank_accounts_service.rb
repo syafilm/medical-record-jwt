@@ -20,7 +20,7 @@ class BankAccountsService
   def object_create(bank_account)
     bank_account.bankname = @bankname if @bankname.present?
     bank_account.iban = @iban if @iban.present?
-    bank_account.bic = @bic if @contract.present?
+    bank_account.bic = @bic if @bic.present?
     bank_account.account_holder = @account_holder if @account_holder.present?
     bank_account.superadmin_id = @superadmin.id if @superadmin.present?
     bank_account

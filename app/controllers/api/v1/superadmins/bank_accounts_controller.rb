@@ -5,8 +5,8 @@ module Api
         before_action :authenticate_superadmin!
 
         def update
-          staff_id = params['id']
-          bank_account = BankAccount.find_by(staff_id: staff_id)
+          id = params['id']
+          bank_account = BankAccount.find_by(id: id)
           superadmin = current_superadmin
           superadmin_id = superadmin.present? ? superadmin.id : ''
           @bank_account = BankAccountsService.new(superadmin, bank_account_params).object_create(bank_account)
@@ -17,8 +17,8 @@ module Api
         end
 
         def detail
-          staff_id = params['id']
-          @bank_account = BankAccount.find_by(staff_id: staff_id)
+          id = params['id']
+          @bank_account = BankAccount.find_by(id: id)
           render json: @bank_account, status: :ok
         end
 

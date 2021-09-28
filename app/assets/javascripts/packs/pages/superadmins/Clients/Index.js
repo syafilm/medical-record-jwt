@@ -5,8 +5,8 @@ import {useStore} from 'context'
 import {observer} from 'mobx-react'
 import {Input, Select, Modal, Button} from 'components'
 import {Helpers, Breakpoints, Validation} from 'utils'
-import {ApiStaffs} from 'api'
-import {ModelStaff} from 'models'
+import {ApiClients} from 'api'
+import {ModelClient} from 'models'
 import moment from 'moment'
 import avatar from 'images/avatar.png'
 import Dropzone from 'react-dropzone'
@@ -16,7 +16,7 @@ import Wrapper from '../Wrapper'
 import 'react-input-range/lib/css/index.css'
 
 const Content = styled.div`
-  padding: 25px 15px; 
+  padding: 25px 15px;
   > button{
     width: 100%;
   }
@@ -141,8 +141,8 @@ const Card = styled.div`
       display: flex;
       width: 100%;
       > img{
-        width: 50px;
-        height: 50px;
+        width: 70px;
+        height: 70px;
         display: inline-block;
         margin-right: 10px;
         border-radius: 5px;
@@ -153,15 +153,28 @@ const Card = styled.div`
         display: flex;
         align-items: flex-start;
         width: 100%;
+        margin-bottom: 10px;
         > div{
           > b{
             display: block;
             margin-bottom: 0px;
             font-size: 14px;
+            display: block;
           }
           > span{
             color: rgba(0,0,0, 0.6);
             font-size: 14px;
+            display: block;
+          }
+          p{
+            margin: 0px;
+            font-size: 12px;
+            padding: 1px 12px;
+            background: #e9eef1;
+            border-radius: 3px;
+            display: inline-block;
+            color: rgba(0,0,0, 0.6);
+            margin-top: 6px;
           }
         }
       }
@@ -224,17 +237,17 @@ const Index = observer(() => {
     clientLoading: true
   })
 
-  // const getStaffs = async() => {
-  //   try {
-  //     const {data} = await ApiStaffs.index()
-  //     setStaff(prev => ({...prev, index: data}))
-  //   } catch (e) {
-  //     console.log(e)
-  //   }
-  // }
+  const getClients = async() => {
+    try {
+      const {data} = await ApiClients.index()
+      setClient(prev => ({...prev, index: data}))
+    } catch (e) {
+      console.log(e)
+    }
+  }
 
   React.useEffect(() => {
-    // getStaffs()
+    getClients()
   }, [])
   
   const { hexToRgb } = Helpers
@@ -248,10 +261,10 @@ const Index = observer(() => {
       <Wrapper>
         <Content>
           <Title>
-            <h4><b>All</b></h4>
+            <h4><b>Clients</b></h4>
             <Link to={`/${role}/clients/new`}><b>+</b>Add client</Link>
           </Title>
-          {/* {client.index.map((any, index) => {
+          {client.index.map((any, index) => {
             return(
               <Card key={any.id}>
                 <Link to={`/${role}/clients/${any.id}`}>
@@ -260,6 +273,7 @@ const Index = observer(() => {
                     <div>
                       <b>{any?.name}</b>
                       <span>{any?.email}</span>
+                      <p>client</p>
                     </div>
                   </div>
                   <div>
@@ -272,7 +286,7 @@ const Index = observer(() => {
                 </Link>
               </Card>
             )
-          })} */}
+          })}
         </Content>
       </Wrapper>
     </>

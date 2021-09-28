@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_08_013419) do
+ActiveRecord::Schema.define(version: 2021_09_27_234601) do
 
   create_table "bank_accounts", charset: "utf8mb4", collation: "utf8mb4_bin", force: :cascade do |t|
     t.string "bankname"
@@ -19,8 +19,10 @@ ActiveRecord::Schema.define(version: 2021_09_08_013419) do
     t.string "account_holder"
     t.bigint "superadmin_id"
     t.bigint "staff_id"
+    t.bigint "client_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["client_id"], name: "index_bank_accounts_on_client_id"
     t.index ["staff_id"], name: "index_bank_accounts_on_staff_id"
     t.index ["superadmin_id"], name: "index_bank_accounts_on_superadmin_id"
   end
@@ -28,23 +30,25 @@ ActiveRecord::Schema.define(version: 2021_09_08_013419) do
   create_table "clients", charset: "utf8mb4", collation: "utf8mb4_bin", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
+    t.text "cln"
     t.text "name"
     t.text "surname"
     t.text "phone"
+    t.bigint "superadmin_id"
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "avatar"
     t.index ["email"], name: "index_clients_on_email", unique: true
     t.index ["reset_password_token"], name: "index_clients_on_reset_password_token", unique: true
+    t.index ["superadmin_id"], name: "index_clients_on_superadmin_id"
   end
 
-  create_table "clinic_structures", charset: "utf8mb4", collation: "utf8mb4_bin", force: :cascade do |t|
-    t.bigint "bank_account_id"
+  create_table "clinic_addresses", charset: "utf8mb4", collation: "utf8mb4_bin", force: :cascade do |t|
     t.bigint "superadmin_id"
     t.bigint "client_id"
-    t.bigint "employee_state_id"
     t.text "streetname"
     t.text "streetnumber"
     t.text "zip_code"
@@ -56,10 +60,52 @@ ActiveRecord::Schema.define(version: 2021_09_08_013419) do
     t.text "phone_clinic"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["client_id"], name: "index_clinic_addresses_on_client_id"
+    t.index ["superadmin_id"], name: "index_clinic_addresses_on_superadmin_id"
+  end
+
+  create_table "clinic_structures", charset: "utf8mb4", collation: "utf8mb4_bin", force: :cascade do |t|
+    t.bigint "bank_account_id"
+    t.bigint "superadmin_id"
+    t.bigint "client_id"
+    t.bigint "employee_state_id"
+    t.bigint "clinic_address_id"
+    t.string "early_start"
+    t.string "early_end"
+    t.string "middle_start"
+    t.string "middle_end"
+    t.string "late_start"
+    t.string "late_end"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
     t.index ["bank_account_id"], name: "index_clinic_structures_on_bank_account_id"
     t.index ["client_id"], name: "index_clinic_structures_on_client_id"
+    t.index ["clinic_address_id"], name: "index_clinic_structures_on_clinic_address_id"
     t.index ["employee_state_id"], name: "index_clinic_structures_on_employee_state_id"
     t.index ["superadmin_id"], name: "index_clinic_structures_on_superadmin_id"
+  end
+
+  create_table "contacts", charset: "utf8mb4", collation: "utf8mb4_bin", force: :cascade do |t|
+    t.string "name", default: "", null: false
+    t.string "slug", default: "", null: false
+    t.string "email"
+    t.string "phone"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["slug"], name: "index_contacts_on_slug", unique: true
+  end
+
+  create_table "content_contacts", charset: "utf8mb4", collation: "utf8mb4_bin", force: :cascade do |t|
+    t.bigint "client_id"
+    t.bigint "contact_id"
+    t.bigint "clinic_address_id"
+    t.bigint "clinic_structure_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["client_id"], name: "index_content_contacts_on_client_id"
+    t.index ["clinic_address_id"], name: "index_content_contacts_on_clinic_address_id"
+    t.index ["clinic_structure_id"], name: "index_content_contacts_on_clinic_structure_id"
+    t.index ["contact_id"], name: "index_content_contacts_on_contact_id"
   end
 
   create_table "content_departments", charset: "utf8mb4", collation: "utf8mb4_bin", force: :cascade do |t|
@@ -75,11 +121,11 @@ ActiveRecord::Schema.define(version: 2021_09_08_013419) do
 
   create_table "content_qualifications", charset: "utf8mb4", collation: "utf8mb4_bin", force: :cascade do |t|
     t.bigint "staff_id"
-    t.bigint "clients_id"
+    t.bigint "client_id"
     t.bigint "qualification_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["clients_id"], name: "index_content_qualifications_on_clients_id"
+    t.index ["client_id"], name: "index_content_qualifications_on_client_id"
     t.index ["qualification_id"], name: "index_content_qualifications_on_qualification_id"
     t.index ["staff_id"], name: "index_content_qualifications_on_staff_id"
   end
@@ -129,10 +175,41 @@ ActiveRecord::Schema.define(version: 2021_09_08_013419) do
     t.datetime "contract"
     t.bigint "superadmin_id"
     t.bigint "staff_id"
+    t.bigint "client_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["client_id"], name: "index_employee_states_on_client_id"
     t.index ["staff_id"], name: "index_employee_states_on_staff_id"
     t.index ["superadmin_id"], name: "index_employee_states_on_superadmin_id"
+  end
+
+  create_table "price_conditions", charset: "utf8mb4", collation: "utf8mb4_bin", force: :cascade do |t|
+    t.bigint "client_id"
+    t.bigint "superadmin_id"
+    t.bigint "price_setting_id"
+    t.text "job_position"
+    t.decimal "hourly_rate", precision: 10, scale: 2
+    t.integer "vat"
+    t.integer "percentage_zero"
+    t.integer "percentage_one"
+    t.integer "percentage_two"
+    t.integer "percentage_three"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["client_id"], name: "index_price_conditions_on_client_id"
+    t.index ["price_setting_id"], name: "index_price_conditions_on_price_setting_id"
+    t.index ["superadmin_id"], name: "index_price_conditions_on_superadmin_id"
+  end
+
+  create_table "price_settings", charset: "utf8mb4", collation: "utf8mb4_bin", force: :cascade do |t|
+    t.bigint "client_id"
+    t.bigint "superadmin_id"
+    t.text "notes"
+    t.text "vat_nr"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["client_id"], name: "index_price_settings_on_client_id"
+    t.index ["superadmin_id"], name: "index_price_settings_on_superadmin_id"
   end
 
   create_table "qualifications", charset: "utf8mb4", collation: "utf8mb4_bin", force: :cascade do |t|
@@ -163,7 +240,6 @@ ActiveRecord::Schema.define(version: 2021_09_08_013419) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.text "avatar"
-    t.text "files"
     t.index ["email"], name: "index_staffs_on_email", unique: true
     t.index ["reset_password_token"], name: "index_staffs_on_reset_password_token", unique: true
     t.index ["superadmin_id"], name: "index_staffs_on_superadmin_id"
@@ -197,18 +273,6 @@ ActiveRecord::Schema.define(version: 2021_09_08_013419) do
     t.text "object", size: :long
     t.datetime "created_at"
     t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
-  end
-
-  create_table "workplaces", charset: "utf8mb4", collation: "utf8mb4_bin", force: :cascade do |t|
-    t.datetime "entry_date"
-    t.datetime "exit_date"
-    t.datetime "contract_until"
-    t.bigint "client_id"
-    t.bigint "staff_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["client_id"], name: "index_workplaces_on_client_id"
-    t.index ["staff_id"], name: "index_workplaces_on_staff_id"
   end
 
 end

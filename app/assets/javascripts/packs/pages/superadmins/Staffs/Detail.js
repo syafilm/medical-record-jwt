@@ -441,8 +441,10 @@ const Detail = observer(() => {
     bic: '', bicError: '',
     accountHolder: '', accountHolderError: '',
    // --- general --- //
-
+    employeeStateId: '',
+    bankAccountId: '',
   })
+
   const [showModalAttachment, setShowModalAttachment] = React.useState(false);
   const [showModalArchives, setShowModalArchives] = React.useState(false);
   const [activeInputValue] = useDebounce(staff[staff.typeInput], 2000);
@@ -483,9 +485,9 @@ const Detail = observer(() => {
     }
   }
 
-  const getEmployeeStateDetail = async(modelId) => {
+  const getEmployeeStateDetail = async(id) => {
     try {
-      const employeeState = await ApiEmployeeStates.detail(modelId)
+      const employeeState = await ApiEmployeeStates.detail(id)
       const entry = employeeState?.data?.entry?.split('T')[0] || ''
       const exit = employeeState?.data?.exit?.split('T')[0] || ''
       const contract = employeeState?.data?.contract?.split('T')[0] || ''
@@ -493,16 +495,17 @@ const Detail = observer(() => {
         ...prev,
         entry,
         exit,
-        contract
+        contract,
+        employeeStateId: id,
       }))
     } catch (e) {
       console.log(e)
     }
   }
 
-  const getBankAccountDetail = async(modelId) => {
+  const getBankAccountDetail = async(id) => {
     try {
-      const bankAccount = await ApiBankAccounts.detail(modelId)
+      const bankAccount = await ApiBankAccounts.detail(id)
       const bankname = bankAccount.data.bankname || ''
       const iban = bankAccount.data.iban || ''
       const bic = bankAccount.data.bic || ''
@@ -513,6 +516,7 @@ const Detail = observer(() => {
         iban,
         bic,
         accountHolder,
+        bankAccountId: id,
       }))
     } catch (e) {
       console.log(e)
@@ -533,19 +537,19 @@ const Detail = observer(() => {
           const newAttr = attr === 'tag' ? 'tag_arr' : 'qualification_arr'
           value.map(t => formMainInfo.append(`staff[${newAttr}][]`, t.label))
         }else{
-          formMainInfo.append(`staff[${snakeCaseAttr}]`, value)
+          formMainInfo.append(`staff[${snakeCaseAttr}]`, value.label)
         }
         const dataMainInfo = await ApiStaffs.update(staff.modelId, formMainInfo)
         console.log(dataMainInfo)
       }else if(employeeState.includes(attr)){
         const formEmployee = new FormData()
         formEmployee.append(`employee_state[${snakeCaseAttr}]`, value)
-        const dataEmployeeState = await ApiEmployeeStates.update(staff.modelId, formEmployee)
+        const dataEmployeeState = await ApiEmployeeStates.update(staff.employeeStateId, formEmployee)
         console.log(dataEmployeeState)
       }else if(bankAccount.includes(attr)){
         const formBank = new FormData()
         formBank.append(`bank_account[${snakeCaseAttr}]`, value)
-        const dataBankAccount = await ApiBankAccounts.update(staff.modelId, formBank)
+        const dataBankAccount = await ApiBankAccounts.update(staff.bankAccountId, formBank)
         console.log(dataBankAccount)
       }
     } catch (e) {
@@ -592,10 +596,10 @@ const Detail = observer(() => {
       const {data} = await ApiDocuments.destroy(id)
       if (process.env.ENV_APP === 'development') {
         console.log(`${type === 'attachment' ? `attachment` : `archive`} successfully deleted`)
-        getStaffsDetail(slug)
       }
+      getStaffsDetail(slug)
     } catch (e) {
-      console.log(e)      
+      console.log(e)
     }
   }
 
@@ -664,8 +668,8 @@ const Detail = observer(() => {
       updateMainInfo(activeInputValue, staff.typeInput)
     }else{
       getStaffsDetail(slug).then(({data}) => {
-        getEmployeeStateDetail(data.id)
-        getBankAccountDetail(data.id)
+        getEmployeeStateDetail(data?.employee_state?.id)
+        getBankAccountDetail(data?.bank_account?.id)
       })
     }
   }, [slug, tab, activeInputValue])
@@ -776,34 +780,37 @@ const Detail = observer(() => {
                         }}>+</b>
                       </div>
                     </Subtitle>
-                    <Table style={{marginTop: '10px'}}>
-                      <thead>
-                        <tr>
-                          <th scope="col">Name</th>
-                          <th scope="col">Extension</th>
-                          <th scope="col">Size</th>
-                          <th scope="col">Last Changed</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {
-                          staff.archives.map((a) => {
-                            return(
-                              <tr key={a.id}>
-                                <td scope="row">
-                                  <span>
-                                    {a.name}
-                                  </span>
-                                </td>
-                                <td>{a.extension}</td>
-                                <td>{readablizeBytes(a.size)}</td>
-                                <td>{a.updated_at.split('T')[0]}</td>
-                              </tr>
-                            )
-                          })
-                        }
-                      </tbody>
-                    </Table>
+                    {
+                      staff.archives.length > 0 &&
+                      <Table style={{marginTop: '10px'}}>
+                        <thead>
+                          <tr>
+                            <th scope="col">Name</th>
+                            <th scope="col">Extension</th>
+                            <th scope="col">Size</th>
+                            <th scope="col">Last Changed</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {
+                            staff.archives.map((a) => {
+                              return(
+                                <tr key={a.id}>
+                                  <td scope="row">
+                                    <span>
+                                      {a.name}
+                                    </span>
+                                  </td>
+                                  <td>{a.extension}</td>
+                                  <td>{readablizeBytes(a.size)}</td>
+                                  <td>{a.updated_at.split('T')[0]}</td>
+                                </tr>
+                              )
+                            })
+                          }
+                        </tbody>
+                      </Table>
+                    }
                   </Documents>
                 }
               </Box>
@@ -911,7 +918,7 @@ const Detail = observer(() => {
           </Dropzone>
           <Button
             onClick={() => {
-              setShowModalDocuments(false)
+              setShowModalArchives(false)
               getStaffsDetail(slug)
             }}
             color={activeColor}

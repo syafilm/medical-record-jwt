@@ -141,8 +141,8 @@ const Card = styled.div`
       display: flex;
       width: 100%;
       > img{
-        width: 50px;
-        height: 50px;
+        width: 70px;
+        height: 70px;
         display: inline-block;
         margin-right: 10px;
         border-radius: 5px;
@@ -153,15 +153,28 @@ const Card = styled.div`
         display: flex;
         align-items: flex-start;
         width: 100%;
+        margin-bottom: 10px;
         > div{
           > b{
             display: block;
             margin-bottom: 0px;
             font-size: 14px;
+            display: block;
           }
           > span{
             color: rgba(0,0,0, 0.6);
             font-size: 14px;
+            display: block;
+          }
+          p{
+            margin: 0px;
+            font-size: 12px;
+            padding: 1px 12px;
+            background: #e9eef1;
+            border-radius: 3px;
+            display: inline-block;
+            color: rgba(0,0,0, 0.6);
+            margin-top: 6px;
           }
         }
       }
@@ -248,7 +261,7 @@ const Index = observer(() => {
       <Wrapper>
         <Content>
           <Title>
-            <h4><b>All</b></h4>
+            <h4><b>Staffs</b></h4>
             <Link to={`/${role}/staffs/new`}><b>+</b>Add staff</Link>
           </Title>
           {staff.index.map((any, index) => {
@@ -260,6 +273,7 @@ const Index = observer(() => {
                     <div>
                       <b>{any?.name}</b>
                       <span>{any?.email}</span>
+                      <p>staff</p>
                     </div>
                   </div>
                   <div>
