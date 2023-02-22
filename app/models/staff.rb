@@ -56,6 +56,10 @@ class Staff < ApplicationRecord
     end
   end
 
+  def self.search(query)
+    where('lower(name) LIKE ?', "%#{query.downcase}%").order(created_at: :desc, name: :desc)
+  end
+
   private
     def prefix_alphabet
       self.update_column(:stf, "stf-#{id}") # This will skip validation gracefully.

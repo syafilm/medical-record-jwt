@@ -71,7 +71,6 @@ const Subtitle = styled.div`
   }
 `
 
-
 const Employeetime = styled.div`
   display: flex;
   align-items: center;

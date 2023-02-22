@@ -65,6 +65,10 @@ class Client < ApplicationRecord
     end
   end
 
+  def self.search(query)
+    where('lower(name) LIKE ?', "%#{query.downcase}%").order(created_at: :desc, name: :desc)
+  end
+
   private
     def prefix_alphabet
       self.update_column(:cln, "cln-#{id}") # This will skip validation gracefully.

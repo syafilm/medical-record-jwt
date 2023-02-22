@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_27_234601) do
+ActiveRecord::Schema.define(version: 2021_09_29_055724) do
 
   create_table "bank_accounts", charset: "utf8mb4", collation: "utf8mb4_bin", force: :cascade do |t|
     t.string "bankname"
@@ -183,11 +183,19 @@ ActiveRecord::Schema.define(version: 2021_09_27_234601) do
     t.index ["superadmin_id"], name: "index_employee_states_on_superadmin_id"
   end
 
+  create_table "jobs", charset: "utf8mb4", collation: "utf8mb4_bin", force: :cascade do |t|
+    t.string "name", default: "", null: false
+    t.string "slug", default: "", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["slug"], name: "index_jobs_on_slug", unique: true
+  end
+
   create_table "price_conditions", charset: "utf8mb4", collation: "utf8mb4_bin", force: :cascade do |t|
     t.bigint "client_id"
     t.bigint "superadmin_id"
     t.bigint "price_setting_id"
-    t.text "job_position"
+    t.bigint "job_id"
     t.decimal "hourly_rate", precision: 10, scale: 2
     t.integer "vat"
     t.integer "percentage_zero"
@@ -197,6 +205,7 @@ ActiveRecord::Schema.define(version: 2021_09_27_234601) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["client_id"], name: "index_price_conditions_on_client_id"
+    t.index ["job_id"], name: "index_price_conditions_on_job_id"
     t.index ["price_setting_id"], name: "index_price_conditions_on_price_setting_id"
     t.index ["superadmin_id"], name: "index_price_conditions_on_superadmin_id"
   end

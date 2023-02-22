@@ -9,7 +9,7 @@ function params(obj) {
     avatar: obj?.avatar || '',
     qualification_arr: obj?.qualification.map(any => any.value),
     tag_arr: obj?.tag.map(any => any.value),
-    department: Object.keys(obj?.department).length > 0 ? obj?.department?.value : ''
+    department: Object.keys(obj?.department).length > 0 ? obj?.department?.label : ''
   }
 
   Object.keys(data).map((key) => {

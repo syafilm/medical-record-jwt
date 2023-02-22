@@ -40,7 +40,7 @@ const Wrapper = observer(({
         avatar={profile} 
         menu={sidebarMenu}/>
       <Box>
-        <Header avatar={profile} email={user?.detail?.email} />
+        <Header role={user?.role} avatar={profile} email={user?.detail?.email} />
         {children}
       </Box>
     </Content>

@@ -14,6 +14,7 @@ Rails.application.routes.draw do
   get '/superadmin/clients', to: 'superadmins#clients'
   get '/superadmin/clients/new', to: 'superadmins#clients_new'
   get '/superadmin/clients/:slug', to: 'superadmins#clients_detail'
+  get '/superadmin/settings', to: 'superadmins#settings'
   
   #staff section
   get '/staff/login', to: 'staffs#login'
@@ -28,6 +29,7 @@ Rails.application.routes.draw do
   #general scope api
   namespace :api do
     namespace :v1 do
+
       resources :documents, only: %i[create destroy] do
         member do
           get 'list', to: 'documents#list'
@@ -73,6 +75,12 @@ Rails.application.routes.draw do
           end
         end
 
+        resources :jobs, only: %i[] do
+          collection do
+            get 'list', to: 'jobs#list'
+          end
+        end
+
         resources :clinic_structures, only: %i[] do
           member do
             put 'update', to: 'clinic_structures#update'
@@ -108,6 +116,28 @@ Rails.application.routes.draw do
 
           collection do
             get 'list', to: 'contacts#list'
+          end
+        end
+        
+        resources :price_conditions, only: %i[create destroy] do
+          member do
+            put 'update', to: 'price_conditions#update'
+          end
+
+          collection do
+            get 'list', to: 'price_conditions#list'
+          end
+        end
+
+        resources :price_settings, only: %i[] do
+          member do
+            put 'update', to: 'price_settings#update'
+          end
+        end
+
+        resources :search, only: %i[] do
+          collection do
+            get ':keyword', to: 'search#search'
           end
         end
 

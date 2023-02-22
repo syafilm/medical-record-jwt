@@ -13,9 +13,12 @@ import {
   ApiEmployeeStates,
   ApiBankAccounts,
   ApiDepartments,
-  ApiContacts
+  ApiContacts,
+  ApiPriceConditions,
+  ApiJobs,
+  ApiPriceSettings
 } from 'api'
-import {ModelClient, ModelDocument} from 'models'
+import {ModelClient, ModelDocument, ModelPriceCondition} from 'models'
 import {confirmAlert} from 'react-confirm-alert'
 import {useDebounce} from 'use-debounce'
 import moment from 'moment'
@@ -27,6 +30,7 @@ import Wrapper from '../Wrapper'
 import uuid from 'uuid'
 import Information from './elements/Detail/Information'
 import Profile from './elements/Detail/Profile'
+import General from './elements/Detail/General'
 
 const clinicStucture = [
   'department',
@@ -43,6 +47,7 @@ const clinicStucture = [
 const clinicAddress = ['streetname', 'streetnumber', 'zipCode', 'region', 'country', 'companyName', 'ceoOwner', 'website', 'phoneClinic']
 const employeeState = ['entry', 'exit', 'contract']
 const bankAccount = ['bankname', 'iban', 'bic', 'accountHolder']
+const priceSetting = ['notes', 'vatNr']
 
 const Content = styled.div`
   display: flex;
@@ -169,7 +174,7 @@ const Attachment = styled.div`
   }
 `
 
-const General = styled.div`
+const PriceSetting = styled.div`
   display: flex;
   padding: 15px;
   padding-left: 0px;
@@ -180,70 +185,6 @@ const General = styled.div`
   }
   > h3, h4{
     font-family: 'OpenSans Bold';
-  }
-`
-
-const Form = styled.div`
-  display: block;
-  width: 100%;
-  margin-top: 15px;
-  margin-bottom: 15px;
-`
-
-const Wardtime = styled.div`
-  display: flex;
-  align-items: center;
-  margin-left: -15px;
-  margin-right: -15px;
-  &:nth-of-type(1), 
-  &:nth-of-type(2),
-  &:nth-of-type(3){
-    > div{
-      > div{
-        > div{
-          &:nth-of-type(1){
-            margin-right: 30px;
-          }
-        }
-      }
-    }
-  }
-  > div{
-    width: 33.3%;
-    padding-left: 15px;
-    padding-right: 15px;
-    display: inline-flex;
-    flex-direction: column;
-    > label{
-      display: flex;
-    }
-    > div{
-      width: 100%;
-      display: inline-flex;
-      > div{
-        width: 50%;
-      }
-    }
-    input{
-      min-width: unset;
-      width: auto;
-    }
-  }
-`
-
-const Wardcontact = styled.div`
-  display: flex;
-  align-items: center;
-  margin-left: -15px;
-  margin-right: -15px;
-  > div{
-    width: 50%;
-    padding-left: 15px;
-    padding-right: 15px;
-    > input{
-      min-width: unset;
-      width: auto;
-    }
   }
 `
 
@@ -291,88 +232,234 @@ const Subtitle = styled.div`
   }
 `
 
-const Employeetime = styled.div`
+const Condition = styled.div`
   display: flex;
-  align-items: center;
-  margin-left: -15px;
-  margin-right: -15px;
-  > div{
-    width: 32.3%;
-    padding-left: 15px;
-    padding-right: 15px;
-    > input{
-      min-width: unset;
-      width: auto;
-    }
-  }
+  flex-direction: column;
+  padding: 15px;
 `
 
-const Address = styled.div`
-  display: flex;
-  align-items: center;
-  margin-left: -15px;
-  margin-right: -15px;
+const Percentage = styled.div`
+  display: inline-flex;
+  width: 100%;
   > div{
     width: 50%;
-    padding-left: 15px;
-    padding-right: 15px;
+    &:nth-of-type(1){
+      padding-right: 15px;
+    }
+    &:nth-of-type(2){
+      padding-left: 15px;
+    }
     > input{
-      min-width: unset;
       width: auto;
+      min-width: unset;
     }
   }
 `
 
-const Region = styled.div`
-  display: flex;
-  align-items: center;
-  margin-left: -15px;
-  margin-right: -15px;
-  > div{
-    width: 32.3%;
-    padding-left: 15px;
-    padding-right: 15px;
-    > input{
-      min-width: unset;
-      width: auto;
+const Table = styled.table`
+  width: 100%;
+  margin-bottom: 0rem;
+  color: #212529;
+  border-collapse: collapse;
+  display: table;
+  border-color: grey;
+  > thead{
+    display: table-header-group;
+    vertical-align: middle;
+    border-color: inherit;
+    > tr{
+      display: table-row;
+      vertical-align: inherit;
+      border-color: inherit;
+    }
+    th{
+      display: table-cell;
+      vertical-align: inherit;
+      vertical-align: bottom;
+      border-bottom: 1px solid #dee2e6;
+      font-family: 'OpenSans Bold';
+      padding: .75rem;
+      vertical-align: top;
+      border-top: 0px solid #dee2e6;
+      text-align:left;
+      &:nth-of-type(1){
+        width: 30%;
+        padding-left: 0px;
+      }
+      &:nth-of-type(4){
+        padding-right: 0px;
+      }
+    }
+  }
+  > tbody{
+    tr{
+      display: table-row;
+      vertical-align: inherit;
+      border-color: inherit;
+      &:nth-of-type(odd){
+        background-color: rgba(44, 189, 165, 0.1);
+      }
+    }
+    td{
+      display: table-cell;
+      vertical-align: inherit;
+      padding: .75rem;
+      vertical-align: top;
+      border-top: 0px solid #dee2e6;
+      font-size: 14px;
+      &:nth-of-type(1){
+        padding-left: 0px;
+      }
+      &:nth-of-type(4){
+        padding-right: 0px;
+      }
+      > span{
+        position: relative;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: normal;
+        -webkit-line-clamp: 1;
+      }
     }
   }
 `
 
-const Company = styled.div`
+const Action = styled.p`
   display: flex;
   align-items: center;
-  margin-left: -15px;
-  margin-right: -15px;
-  > div{
-    width: 50%;
-    padding-left: 15px;
-    padding-right: 15px;
-    > input{
-      min-width: unset;
-      width: auto;
+  margin: 0px;
+  > i{
+    font-size: 20px;
+    cursor: pointer;
+    &:nth-of-type(1){
+      margin-right: 10px;
+    }
+    &:nth-of-type(2){
+      margin-left: 10px;
     }
   }
 `
 
-const Banking = styled.div`
-  display: flex;
-  align-items: center;
-  margin-left: -15px;
-  margin-right: -15px;
+const Customer = styled.div`
   > div{
-    width: 50%;
-    padding-left: 15px;
-    padding-right: 15px;
-    > input{
-      min-width: unset;
-      width: auto;
+    &:nth-of-type(1){
+      margin-bottom: 15px;
+    }
+  }
+`
+
+const Notes = styled.div`
+  > div{
+    &:nth-of-type(1){
+      margin-bottom: 15px;
+    }
+  }
+`
+
+const Documents = styled.div`
+  display: flex;
+  padding: 15px;
+  padding-left: 0px;
+  padding-right: 0px;
+  flex-direction: column;
+  @media ${Breakpoints.laptop} {
+    max-width: 768px;
+  }
+  > h3, h4{
+    font-family: 'OpenSans Bold';
+  }
+`
+
+const Archives = styled.div`
+  padding: 15px;
+  > button{
+    width: 100%;
+    margin-top: 15px;
+  }
+  #dropzone-preview{
+    width: 100% !important;
+    height: 50px !important;
+    border: 1px dashed rgb(102, 102, 102) !important;
+    border-radius: 5px !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    > span{
+      font-size: 14px;
+    }
+  }
+  > h4{
+    font-family: 'OpenSans Bold';
+    margin-bottom: 10px;
+  }
+  > ul{
+    display: flex;
+    padding: 0px;
+    margin: 0px;
+    margin-bottom: 15px;
+    flex-direction: column;
+    > li{
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 5px;
+      > i{
+        font-size: 34px;
+        width: 24px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+      > div{
+        margin-left: 10px;
+        width: 100%;
+        position: relative;
+        > i{
+          right: 0px;
+          position: absolute;
+          width: 16px;
+          height: 16px;
+          top: 2px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 50%;
+          background: #000;
+          color: #fff;
+          font-size: 10px;
+          font-style: normal;
+          cursor: pointer;
+        }
+        > span{
+          display: flex;
+          font-size: 14px;
+          width: 100%;
+          &:nth-of-type(2){
+            font-size: 13px;
+          }
+          &:nth-of-type(1){
+            margin-bottom: 0px;
+            font-family: 'OpenSans Bold';
+            position: relative;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: normal;
+            -webkit-line-clamp: 1;
+            width: 95%;
+            color: #4b988b;
+          }
+        }
+      }
     }
   }
 `
 
 const Detail = observer(() => {
-  const location = useLocation();
+  const location = useLocation()
   const store = useStore()
   const {slug} = useParams()
   const { user, handleNotification } = store.user
@@ -384,9 +471,14 @@ const Detail = observer(() => {
     typeInput: '',
     attachments: [], attachmentsLoading: [], temporaryAttachments: [],
     fileError: '', activeTab: tab, modelId: '',
-
+    archives: [],
+    temporaryArchives: [],
+    archivesLoading: [],
+    // this is for general tab 
     // --- clinic structure --- //
-    modelType: 'client', department: '', departmentOption: [],
+    // this is for general tab 
+    modelType: 'client', 
+    department: '', departmentOption: [],
     departmentError: '',
     contact: '',
     contactOption: [],
@@ -431,26 +523,73 @@ const Detail = observer(() => {
     bankAccountId: '',
     employeeStateId: '',
    // --- clinic structure --- //
+   // this is for general tab 
+   
+   // this is for price setting
+   priceConditions: [],
+   priceConditionId: '',
+   job: {},
+   jobOption: [],
+   jobError: '',
+   hourlyRate: 0,
+   hourlyRateError: '',
+   vat: 0,
+   vatError: '',
+   percentageZero: 0,
+   percentageZeroError: '',
+   percentageOne: 0,
+   percentageOneError: '',
+   percentageTwo: 0,
+   percentageTwoError: '',
+   percentageThree: 0,
+   percentageThreeError: '',
+   notes: '',
+   notesError: '',
+   vatNr: '',
+   vatNrError: '',
+   // this is for price setting
 
   })
   const [showModalAttachment, setShowModalAttachment] = React.useState(false);
+  const [showModalCondition, setShowModalCondition] = React.useState(false);
+  const [showModalArchives, setShowModalArchives] = React.useState(false);
   const [activeInputValue] = useDebounce(client[client.typeInput], 2000);
-  const {hexToRgb, detailTabClient, readablizeBytes, camelToSnakeCase, snakeToCamelCase} = Helpers
+  const {hexToRgb, 
+    detailTabClient, 
+    readablizeBytes, 
+    camelToSnakeCase, 
+    snakeToCamelCase,
+    capitalizeFirstLetter
+  } = Helpers
 
   const getClientsDetail = async(slug) => {
     try {
       const detail = await ApiClients.detail(slug)
+      const documentAttachment = await ApiDocuments.list(slug, 'client', 'attachment')
+      const documentArchive = await ApiDocuments.list(slug, 'client', 'archive')
       const departments = await ApiDepartments.list()
       const contacts = await ApiContacts.list()
-      const clinicStructureId = detail?.data?.clinic_structure.id
+      const jobs = await ApiJobs.list()
+      const clinicStructureId = detail?.data?.clinic_structure?.id
+      const priceSettingId = detail?.data?.price_setting?.id
+      const priceConditions = await ApiPriceConditions.list(priceSettingId)
       await getClinicStructuresDetail(clinicStructureId)
 
       setClient(prev => ({...prev, 
         detail: detail.data,
         clientLoading: false,
         modelId: detail.data.id,
+        attachments: documentAttachment.data || [],
+        archives: documentArchive.data || [],
+        temporaryAttachments: documentAttachment.data || [],
+        temporaryArchives: documentArchive.data || [],
         departmentOption: departments.data,
-        contactOption: contacts.data
+        contactOption: contacts.data,
+        priceSettingId,
+        jobOption: jobs.data,
+        priceConditions: priceConditions.data,
+        notes: detail.data.price_setting.notes,
+        vatNr: detail.data.price_setting.vat_nr,
         // attachments: attachment.data,
         // temporaryAttachments: attachment.data,
       }))
@@ -459,6 +598,7 @@ const Detail = observer(() => {
     }
   }
 
+  // this slug comes from clinic structure Id
   const getClinicStructuresDetail = async(slug) => {
     try {
       const detail = await ApiClinicStructures.detail(slug)
@@ -519,9 +659,11 @@ const Detail = observer(() => {
         const dataClinicAddress = await ApiClinicAddresses.update(client.clinicAddressId, formClinicAddress)
         console.log(dataClinicAddress, 'dataClinicAddress')
       }else if(clinicStucture.includes(attr)){
+        
         const formClinicStructure = new FormData()
         const formContact = new FormData()
         const contact = ['contactEmail', 'contactPhone']
+        
         if(attr === 'contact'){
           formClinicStructure.append(`clinic_structure[${snakeCaseAttr}]`, value.label)
           const dataClinicStructureContact = await ApiClinicStructures.update(client.clinicStuctureId, formClinicStructure)
@@ -547,6 +689,11 @@ const Detail = observer(() => {
         formBank.append(`bank_account[${snakeCaseAttr}]`, value);
         const dataBankAccount = await ApiBankAccounts.update(client.bankAccountId, formBank)
         console.log(dataBankAccount, 'dataBankAccount')
+      }else if(priceSetting.includes(attr)){
+        const formPriceSetting = new FormData()
+        formPriceSetting.append(`price_setting[${snakeCaseAttr}]`, value);
+        const dataBankPriceSetting = await ApiPriceSettings.update(client.priceSettingId, formPriceSetting)
+        console.log(dataBankPriceSetting, 'dataBankPriceSetting')
       }
 
     } catch (e) {
@@ -555,8 +702,8 @@ const Detail = observer(() => {
 
   }
 
-  const handleFile = (client) => (attachments) => {
-    const newFiles = attachments.filter(any => (Validation.file(any.name) === ''))
+  const handleFile = (client, type) => (files) => {
+    const newFiles = files.filter(any => (Validation.file(any.name) === ''))
     
     let i = 0
     while (i < newFiles.length) {
@@ -570,15 +717,17 @@ const Detail = observer(() => {
         uuid: uuid.v4(),
         progress: {}
       }
-      handleUploadFile(client, newFiles[total], theFile.uuid)
-      setClient(prev => ({...prev, temporaryAttachments: prev.temporaryAttachments.concat(theFile)}))
+      handleUploadFile(client, newFiles[total], theFile.uuid, type)
+      const stateType = capitalizeFirstLetter(type)
+      setClient(prev => ({...prev, [`temporary${stateType}s`]: prev[`temporary${stateType}s`].concat(theFile)}))
     }
   }
 
-  const handleUploadProgress = (uuid) => (progress) => {
+  const handleUploadProgress = (uuid, type) => (progress) => {
+    const stateType = capitalizeFirstLetter(type)
     setClient(prev => ({
-      ...prev, 
-      temporaryAttachments: prev.temporaryAttachments.map(a => {
+      ...prev,
+      [`temporary${stateType}s`]: prev[`temporary${stateType}s`].map(a => {
         if(a.uuid === uuid){
           return{...a, progress}
         }
@@ -587,11 +736,23 @@ const Detail = observer(() => {
     }))
   }
 
-  const handleDeleteFile = async(id) => {
+  const handleDeleteFile = async(id, type) => {
     try {
       const {data} = await ApiDocuments.destroy(id)
       if (process.env.ENV_APP === 'development') {
-        console.log('file successfully deleted')
+        console.log(`${type === 'attachment' ? `attachment` : `archive`} successfully deleted`)
+      }
+      getClientsDetail(slug)
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  const handleDeletePriceCondition = async(id) => {
+    try {
+      const {data} = await ApiPriceConditions.destroy(id)
+      if (process.env.ENV_APP === 'development') {
+        console.log('price conditions successfully deleted')
         getClientsDetail(slug)
       }
     } catch (e) {
@@ -599,13 +760,14 @@ const Detail = observer(() => {
     }
   }
 
-  const handleUploadFile = async(client, file, uuid) => {
+  const handleUploadFile = async(client, file, uuid, uploadType) => {
     try {
-      const objectToSend = ModelDocument.params({...client, file, uuid})
-      const {data} = await ApiDocuments.create(objectToSend, handleUploadProgress(uuid))
+      const objectToSend = ModelDocument.params({...client, file, uuid, uploadType})
+      const {data} = await ApiDocuments.create(objectToSend, handleUploadProgress(uuid, uploadType))
+      const stateType = capitalizeFirstLetter(uploadType)
       setClient(prev => 
         ({...prev,
-          temporaryAttachments: prev.temporaryAttachments.map(a => {
+          [`temporary${stateType}s`]: prev[`temporary${stateType}s`].map(a => {
             if(a.uuid === data.uuid){
               return{...a, ...data, progress: {}}
             }
@@ -638,7 +800,29 @@ const Detail = observer(() => {
     }))
   }
 
-  const confirmDeleteFile = (id) => () => {
+  const submitCondition = async(client) => {
+    try {
+      const objToSend = ModelPriceCondition.params(client)
+      const data = await ApiPriceConditions.create(objToSend)
+      getClientsDetail(slug)
+      console.log(data, 'success')
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  const updateCondition = async(priceConditionId, client) => {
+    try {
+      const objToSend = ModelPriceCondition.params(client)
+      const data = await ApiPriceConditions.update(priceConditionId, objToSend)
+      getClientsDetail(slug)
+      console.log(data, 'success')
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  const confirmDeleteFile = (id, type) => () => {
     confirmAlert({
       customUI: ({ onClose }) => {
         return (
@@ -648,7 +832,7 @@ const Detail = observer(() => {
             textYes="Yes"
             onClickNo={onClose}
             onClickYes={() => {
-              handleDeleteFile(id);
+              handleDeleteFile(id, type);
               onClose();
             }}
             buttonColor="danger"
@@ -657,6 +841,26 @@ const Detail = observer(() => {
       },
     });
   };
+
+  const confirmDeletePriceCondition = (id) => () => {
+    confirmAlert({
+      customUI: ({ onClose }) => {
+        return (
+          <Dialog
+            text="Are you sure want to delete this condition?"
+            textNo="No"
+            textYes="Yes"
+            onClickNo={onClose}
+            onClickYes={() => {
+              handleDeletePriceCondition(id);
+              onClose();
+            }}
+            buttonColor="danger"
+          />
+        );
+      },
+    });
+  }
 
   React.useEffect(() => {
     if(Validation.checkExist(client.typeInput)){
@@ -669,41 +873,6 @@ const Detail = observer(() => {
   }, [slug, tab, activeInputValue])
 
   const {r, g, b} = hexToRgb(activeBackground)
-  const {
-    detail, activeTab, temporaryAttachments, formFileLoading,
-    departmentError, departmentOption, department,
-    early, earlyError, middle, middleError, late, lateError,
-    contact, contactError, contactOption,
-    contactEmail, contactEmailError, 
-    contactPhone, contactPhoneError,
-    entry, entryError, exit, exitError,
-    contract, contractError,
-    streetname, streetnameError, streetnumber, 
-    streetnumberError, zipCode, zipCodeError,
-    region, regionError,
-    country, countryError,
-    companyName, companyNameError,
-    ceoOwner, ceoOwnerError,
-    website, websiteError,
-    phoneClinic, phoneClinicError,
-    bankname, banknameError,
-    iban, ibanError,
-    bic, bicError,
-    accountHolder, 
-    accountHolderError,
-    earlyStart,
-    earlyStartError,
-    earlyEnd,
-    earlyEndError,
-    middleStart,
-    middleStartError,
-    middleEnd,
-    middleEndError,
-    lateStart,
-    lateStartError,
-    lateEnd,
-    lateEndError
-  } = client
 
   if (process.env.ENV_APP === 'development') console.log(client, 'object state')
 
@@ -712,9 +881,9 @@ const Detail = observer(() => {
       <Wrapper>
         <Content>
           {
-            Object.keys(detail).length > 0 &&
+            Object.keys(client.detail).length > 0 &&
             <>
-              <Profile detail={detail}/>
+              <Profile detail={client.detail}/>
               <Box>
                 <Tab>
                   {detailTabClient.map((a) => {
@@ -723,14 +892,15 @@ const Detail = observer(() => {
                         onClick={() => setClient(prev => ({...prev, activeTab: a.slug}))}
                         replace
                         to={`${location.pathname}?tab=${a.slug}`} 
-                        className={`${a.slug === activeTab ? `active` : ``}`}>
+                        className={`${a.slug === client.activeTab ? `active` : ``}`}>
                         {a.label}
                       </Link>
                     </li>
                   })}
                 </Tab>
+                
                 {
-                  activeTab === 'information' &&
+                  client.activeTab === 'information' &&
                   (<Information
                     client={client}
                     setShowModalAttachment={setShowModalAttachment}
@@ -738,354 +908,285 @@ const Detail = observer(() => {
                     readablizeBytes={readablizeBytes}
                   />)
                 }
+
                 {
-                  activeTab === 'general' && 
-                  (
-                    <General>
+                  client.activeTab === 'general' && 
+                  (<General
+                    client={client}
+                    handleInput={handleInput}
+                    handleInputSelect={handleInputSelect}
+                  />)
+                }
+                
+                {
+                  client.activeTab === 'price-settings' && (
+                    <PriceSetting>
                       <Subtitle>
-                        <h4>Clinic Structure</h4>
-                        <div>
-                          {/* &bull; */}
-                          <span><b>+</b> Add</span>
-                        </div>
+                        <h4>Conditions</h4>
+                        <div><span onClick={() => {
+                          setShowModalCondition(true)
+                        }}><b>+</b>
+                        {/* New Condition */}
+                        </span></div>
                       </Subtitle>
-                      <Form>
-                        <Select
+                      {
+                        client.priceConditions.length > 0 &&
+                        <Table style={{marginTop: '10px', marginBottom: '35px'}}>
+                          <thead>
+                            <tr>
+                              <th scope="col">Job Position</th>
+                              <th scope="col">Hourly Rate</th>
+                              <th scope="col">Vat(%)</th>
+                              <th scope="col">Z0(%)</th>
+                              <th scope="col">Z1(%)</th>
+                              <th scope="col">Z2(%)</th>
+                              <th scope="col">Z3(%)</th>
+                              <th scope="col"></th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {
+                              client.priceConditions.map((a) => {
+                                return(
+                                  <tr key={a.id}>
+                                    <td scope="row"><span>{a.job.label}</span></td>
+                                    <td>{a.hourly_rate}</td>
+                                    <td>{a.vat}</td>
+                                    <td>{a.percentage_zero}</td>
+                                    <td>{a.percentage_one}</td>
+                                    <td>{a.percentage_two}</td>
+                                    <td>{a.percentage_three}</td>
+                                    <td>
+                                        <Action>
+                                          <i onClick={() => {
+                                            setShowModalCondition(true);
+                                            setClient(prev => ({
+                                                ...prev, 
+                                                priceConditionId: a.id,
+                                                job: a.job,
+                                                hourlyRate: a.hourly_rate,
+                                                vat: a.vat,
+                                                percentageZero: a.percentage_zero,
+                                                percentageOne: a.percentage_one,
+                                                percentageTwo: a.percentage_two,
+                                                percentageThree: a.percentage_three
+                                            }));
+                                          }} className="la la-edit"></i>
+                                          <i onClick={confirmDeletePriceCondition(a.id)} className="la la-trash"></i>
+                                        </Action>
+                                    </td>
+                                  </tr>
+                                )
+                              })
+                            }
+                          </tbody>
+                        </Table>
+                      }
+                      <Customer>
+                        <Subtitle>
+                          <h4>Customer Notes</h4>
+                        </Subtitle>
+                        <Input
                           label={
-                            (departmentError === '' ? <label>Department&nbsp;<span className="optional">(optional)</span></label> :
-                            <label className="error">{departmentError}</label>)
+                            (client.notesError === '' ? <label>Notes</label> :
+                            <label className="error">{client.notesError}</label>)
                           }
-                          options={departmentOption}
-                          value={department}
-                          error={departmentError}
-                          onChange={handleInputSelect('department')}
+                          placeholder="Notes"
+                          value={client.notes}
+                          error={client.notesError}
+                          type="textarea"
+                          onChange={handleInput('notes')}
                         />
-                        <Wardtime>
-                          <div>
-                            <label>Early shift time (start - end)</label>
-                            <div>
-                              <Input
-                                label={null}
-                                placeholder="Early start shift"
-                                value={earlyStart}
-                                error={earlyStartError}
-                                type="time"
-                                onChange={handleInput('earlyStart')}
-                              />
-                              <Input
-                                label={null}
-                                placeholder="Early end shift"
-                                value={earlyEnd}
-                                error={earlyEndError}
-                                type="time"
-                                onChange={handleInput('earlyEnd')}
-                              />
-                            </div>
-                          </div>
-                          <div>
-                            <label>Mid shift time (start - end)</label>
-                            <div>
-                              <Input 
-                                label={null}
-                                placeholder="Mid shift"
-                                value={middleStart}
-                                error={middleStartError}
-                                type="time"
-                                onChange={handleInput('middleStart')}
-                              />
-                              <Input 
-                                label={null}
-                                placeholder="Mid shift"
-                                value={middleEnd}
-                                error={middleEndError}
-                                type="time"
-                                onChange={handleInput('middleEnd')}
-                              />
-                            </div>
-                          </div>
-                          <div>
-                            <label>Late shift time (start - end)</label>
-                            <div>
-                              <Input 
-                                label={null}
-                                placeholder="Mid shift"
-                                value={lateStart}
-                                error={lateStartError}
-                                type="time"
-                                onChange={handleInput('lateStart')}
-                              />
-                              <Input 
-                                label={null}
-                                placeholder="Mid shift"
-                                value={lateEnd}
-                                error={lateEndError}
-                                type="time"
-                                onChange={handleInput('lateEnd')}
-                              />
-                            </div>
-                          </div>
-                        </Wardtime>
-                        <Select
+                      </Customer>
+                      <Notes>
+                        <Subtitle>
+                          <h4>Notes</h4>
+                        </Subtitle>
+                        <Input
                           label={
-                            (contactError === '' ? <label>Main Contact on Ward</label> :
-                            <label className="error">{contactError}</label>)
+                            (client.vatNrError === '' ? <label>VAT-NR</label> :
+                            <label className="error">{client.vatNrError}</label>)
                           }
-                          options={contactOption}
-                          value={contact}
-                          error={contactError}
-                          onChange={handleInputSelect('contact')}
+                          placeholder="Notes"
+                          value={client.vatNr}
+                          error={client.vatNrError}
+                          type="text"
+                          onChange={handleInput('vatNr')}
                         />
-                        <Wardcontact>
-                          <Input 
-                            label={null}
-                            placeholder="Contact email"
-                            value={contactEmail}
-                            error={contactEmailError}
-                            type="text"
-                            onChange={handleInput('contactEmail')}
-                          />
-                          <Input
-                            label={null}
-                            placeholder="Contact number"
-                            value={contactPhone}
-                            error={contactPhoneError}
-                            type="text"
-                            onChange={handleInput('contactPhone')}
-                          />
-                        </Wardcontact>
-                      </Form>
-                      <Subtitle>
-                        <h4>Employee State</h4>
-                        <div>
-                        </div>
-                      </Subtitle>
-                      <Form>
-                        <Employeetime>
-                          <Input 
-                            label={
-                              (entryError === '' ? <label>Entry Date</label> :
-                              <label className="error">{entryError}</label>)
-                            }
-                            placeholder="Entry date"
-                            value={entry}
-                            error={entryError}
-                            type="date"
-                            onChange={handleInput('entry')}
-                          />
-                          <Input 
-                            label={
-                              (exitError === '' ? <label>Exit Date</label> :
-                              <label className="error">{exitError}</label>)
-                            }
-                            placeholder="Exit Date"
-                            value={exit}
-                            error={exitError}
-                            type="date"
-                            onChange={handleInput('exit')}
-                          />
-                          <Input 
-                            label={
-                              (contractError === '' ? <label>Contract until</label> :
-                              <label className="error">{contractError}</label>)
-                            }
-                            placeholder="Contract until"
-                            value={contract}
-                            error={contractError}
-                            type="date"
-                            onChange={handleInput('contract')}
-                          />
-                        </Employeetime>
-                      </Form>
-                      <Subtitle>
-                        <h4>Clinic Adress</h4>
-                        <div>
-                        </div>
-                      </Subtitle>
-                      <Form>
-                        <Address>
-                          <Input 
-                            label={
-                              (streetnameError === '' ? <label>Streetname</label> :
-                              <label className="error">{streetnameError}</label>)
-                            }
-                            placeholder="Street"
-                            value={streetname}
-                            error={streetnameError}
-                            type="text"
-                            onChange={handleInput('streetname')}
-                          />
-                          <Input 
-                            label={
-                              (streetnumberError === '' ? <label>Streetnumber</label> :
-                              <label className="error">{streetnumberError}</label>)
-                            }
-                            placeholder="Street number"
-                            value={streetnumber}
-                            error={streetnumberError}
-                            type="text"
-                            onChange={handleInput('streetnumber')}
-                          />
-                        </Address>
-                        <Region>
-                          <Input
-                            label={
-                              (zipCodeError === '' ? <label>Zip code</label> :
-                              <label className="error">{zipCodeError}</label>)
-                            }
-                            placeholder="Zipcode"
-                            value={zipCode}
-                            error={zipCodeError}
-                            type="text"
-                            onChange={handleInput('zipCode')}
-                          />
-                          <Input
-                            label={
-                              (regionError === '' ? <label>Region</label> :
-                              <label className="error">{regionError}</label>)
-                            }
-                            placeholder="Region"
-                            value={region}
-                            error={regionError}
-                            type="text"
-                            onChange={handleInput('region')}
-                          />
-                          <Input
-                            label={
-                              (countryError === '' ? <label>Country</label> :
-                              <label className="error">{countryError}</label>)
-                            }
-                            placeholder="Country"
-                            value={country}
-                            error={countryError}
-                            type="text"
-                            onChange={handleInput('country')}
-                          />
-                        </Region>
-                        <Company>
-                          <Input
-                            label={
-                              (companyNameError === '' ? <label>Company Name</label> :
-                              <label className="error">{companyNameError}</label>)
-                            }
-                            placeholder="Company"
-                            value={companyName}
-                            error={companyNameError}
-                            type="text"
-                            onChange={handleInput('companyName')}
-                          />
-                          <Input
-                            label={
-                              (ceoOwnerError === '' ? <label>CEO / Owner</label> :
-                              <label className="error">{ceoOwnerError}</label>)
-                            }
-                            placeholder="CEO / Owner"
-                            value={ceoOwner}
-                            error={ceoOwnerError}
-                            type="text"
-                            onChange={handleInput('ceoOwner')}
-                          />
-                        </Company>
-                        <Company>
-                          <Input
-                            label={
-                              (websiteError === '' ? <label>Website</label> :
-                              <label className="error">{websiteError}</label>)
-                            }
-                            placeholder="Website"
-                            value={website}
-                            error={websiteError}
-                            type="text"
-                            onChange={handleInput('website')}
-                          />
-                          <Input
-                            label={
-                              (phoneClinicError === '' ? <label>Telephone Clinic</label> :
-                              <label className="error">{phoneClinicError}</label>)
-                            }
-                            placeholder="Telephone Clinic"
-                            value={phoneClinic}
-                            error={phoneClinicError}
-                            type="text"
-                            onChange={handleInput('phoneClinic')}
-                          />
-                        </Company>
-                      </Form>
-                      <Subtitle>
-                        <h4>Banking</h4>
-                        <div>
-                        </div>
-                      </Subtitle>
-                      <Form>
-                        <Banking>
-                          <Input
-                            label={
-                              (banknameError === '' ? <label>Bankname</label> :
-                              <label className="error">{banknameError}</label>)
-                            }
-                            placeholder="Bankname"
-                            value={bankname}
-                            error={banknameError}
-                            type="text"
-                            onChange={handleInput('bankname')}
-                          />
-                          <Input
-                            label={
-                              (ibanError === '' ? <label>IBAN</label> :
-                              <label className="error">{ibanError}</label>)
-                            }
-                            placeholder="IBAN"
-                            value={iban}
-                            error={ibanError}
-                            type="text"
-                            onChange={handleInput('iban')}
-                          />
-                        </Banking>
-                        <Banking>
-                          <Input
-                            label={
-                              (bicError === '' ? <label>BIC</label> :
-                              <label className="error">{bicError}</label>)
-                            }
-                            placeholder="BIC"
-                            value={bic}
-                            error={bicError}
-                            type="text"
-                            onChange={handleInput('bic')}
-                          />
-                          <Input
-                            label={
-                              (accountHolderError === '' ? <label>Account Holder</label> :
-                              <label className="error">{accountHolderError}</label>)
-                            }
-                            placeholder="Account Holder"
-                            value={accountHolder}
-                            error={accountHolderError}
-                            type="text"
-                            onChange={handleInput('accountHolder')}
-                          />
-                        </Banking>
-                      </Form>
-                    </General>
+                      </Notes>
+                    </PriceSetting>
                   )
+                }
+
+                {
+                  client.activeTab === 'documents' &&
+                  <Documents>
+                    <Subtitle>
+                      <h4>Client Archive</h4>
+                      <div><span onClick={() => {
+                        setShowModalArchives(true)
+                      }}><b>+</b>
+                      </span></div>
+                    </Subtitle>
+                    {
+                      client.archives.length > 0 &&
+                      <Table style={{marginTop: '10px'}}>
+                        <thead>
+                          <tr>
+                            <th scope="col">Name</th>
+                            <th scope="col">Extension</th>
+                            <th scope="col">Size</th>
+                            <th scope="col">Last Changed</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {
+                            client.archives.map((a) => {
+                              return(
+                                <tr key={a.id}>
+                                  <td scope="row">
+                                    <span>
+                                      {a.name}
+                                    </span>
+                                  </td>
+                                  <td>{a.extension}</td>
+                                  <td>{readablizeBytes(a.size)}</td>
+                                  <td>{a.updated_at.split('T')[0]}</td>
+                                </tr>
+                              )
+                            })
+                          }
+                        </tbody>
+                      </Table>
+                    }
+                  </Documents>
                 }
               </Box>
             </>
           }
         </Content>
       </Wrapper>
+
+      <Modal 
+        show={showModalCondition}
+        onClose={() => {
+          setShowModalCondition(false);
+          setClient(prev => ({...prev, priceConditionId: ''}));
+        }}
+        width={`500px`}
+        height={`auto`}>
+          <Condition>
+            <Subtitle style={{marginBottom: '15px'}}>
+              <h4>Add condition</h4>
+            </Subtitle>
+            <Select
+              label={
+                (client.jobError === '' ? <label>Job Position</label> :
+                <label className="error">{client.jobError}</label>)
+              }
+              options={client.jobOption}
+              value={client.job}
+              error={client.jobError}
+              onChange={handleInputSelect('job')}
+            />
+            <Input
+              label={
+                (client.hourlyRateError === '' ? <label>Hourly Rate</label> :
+                <label className="error">{client.hourlyRateError}</label>)
+              }
+              placeholder="Hourly Rate"
+              value={client.hourlyRate}
+              error={client.hourlyRateError}
+              onChange={handleInput('hourlyRate')}
+            />
+            <Input
+              label={
+                (client.vatError === '' ? <label>Vat</label> :
+                <label className="error">{client.vatError}</label>)
+              }
+              placeholder="Vat"
+              value={client.vat}
+              error={client.vatError}
+              onChange={handleInput('vat')}
+            />
+            <Percentage>
+              <Input
+                label={
+                  (client.percentageZeroError === '' ? <label>Z0</label> :
+                  <label className="error">{client.percentageZeroError}</label>)
+                }
+                placeholder="Z0"
+                value={client.percentageZero}
+                error={client.percentageZeroError}
+                onChange={handleInput('percentageZero')}
+              />
+              <Input
+                label={
+                  (client.percentageOneError === '' ? <label>Z1</label> :
+                  <label className="error">{client.percentageOneError}</label>)
+                }
+                placeholder="Z1"
+                value={client.percentageOne}
+                error={client.percentageOneError}
+                onChange={handleInput('percentageOne')}
+              />
+            </Percentage>
+            <Percentage>
+              <Input
+                label={
+                  (client.percentageTwoError === '' ? <label>Z2</label> :
+                  <label className="error">{client.percentageTwoError}</label>)
+                }
+                placeholder="Z2"
+                value={client.percentageTwo}
+                error={client.percentageTwoError}
+                onChange={handleInput('percentageTwo')}
+              />
+              <Input
+                label={
+                  (client.percentageThreeError === '' ? <label>Z3</label> :
+                  <label className="error">{client.percentageThreeError}</label>)
+                }
+                placeholder="Z3"
+                value={client.percentageThree}
+                error={client.percentageThreeError}
+                onChange={handleInput('percentageThree')}
+              />
+            </Percentage>
+            <Button
+              onClick={() => {
+                if(client.priceConditionId !== ''){
+                  updateCondition(client.priceConditionId, client)
+                }else{
+                  submitCondition(client)
+                }
+              }}
+              color={activeColor}
+              background={activeBackground}
+              borderColor={activeBackground}>
+                {
+                  client.priceConditionId !== '' ?
+                  <b>Update condition</b>
+                  :
+                  <b>Add condition</b>
+                }
+            </Button>
+          </Condition>
+      </Modal>
+
       <Modal
         show={showModalAttachment}
         onClose={() => {
           setShowModalAttachment(false)
         }}
-        width={`400px`} 
+        width={`400px`}
         height={`auto`}>
         <Attachment>
           <h4>Attachment</h4>
           {
-            temporaryAttachments.length > 0 &&
+            client.temporaryAttachments.length > 0 &&
             <ul>
-              {temporaryAttachments.map((a, index) => {
+              {client.temporaryAttachments.map((a, index) => {
                 return(
                   <li key={index}>
                     <i className="las la-file-alt"></i>
@@ -1101,7 +1202,7 @@ const Detail = observer(() => {
                       </span>
                       {
                         Object.keys(a).includes('created_at') && 
-                        <i onClick={confirmDeleteFile(a.id)}>x</i>
+                        <i onClick={confirmDeleteFile(a.id, 'attachment')}>x</i>
                       }
                     </div>
                   </li>
@@ -1109,7 +1210,7 @@ const Detail = observer(() => {
               })}
             </ul>
           }
-          <Dropzone multiple onDrop={handleFile(client)} id="dropzone-preview">
+          <Dropzone multiple onDrop={handleFile(client, 'attachment')} id="dropzone-preview">
             <span>Pilih file</span>
           </Dropzone>
           <Button
@@ -1123,11 +1224,68 @@ const Detail = observer(() => {
             loadingChildren={
               <span>10%</span>
             }
-            loading={formFileLoading}
+            loading={client.formFileLoading}
             borderColor={activeBackground}>
             <b>Upload file</b>
           </Button>
         </Attachment>
+      </Modal>
+
+      {/* Modal document */}
+      <Modal 
+        show={showModalArchives}
+        onClose={() => {
+          setShowModalArchives(false)
+        }}
+        width={`400px`} 
+        height={`auto`}>
+        <Archives>
+          <h4>Documents</h4>
+          {
+            client.temporaryArchives.length > 0 &&
+            <ul>
+              {client.temporaryArchives.map((a, index) => {
+                return(
+                  <li key={index}>
+                    <i className="las la-file-alt"></i>
+                    <div>
+                      <span>{a.name}</span>
+                      <span>
+                        {
+                          (Object.keys(a).includes('progress') && 
+                          Object.keys(a.progress).length > 0) ?
+                          `${readablizeBytes(a.progress.loaded)} / ${readablizeBytes(a.size)} ${Math.round((a.progress.loaded * 100) / a.progress.total)}%` :
+                          `${readablizeBytes(a.size)}`
+                        }
+                      </span>
+                      {
+                        Object.keys(a).includes('created_at') && 
+                        <i onClick={confirmDeleteFile(a.id, 'archive')}>x</i>
+                      }
+                    </div>
+                  </li>
+                )
+              })}
+            </ul>
+          }
+          <Dropzone multiple onDrop={handleFile(client, 'archive')} id="dropzone-preview">
+            <span>Pilih file</span>
+          </Dropzone>
+          <Button
+            onClick={() => {
+              setShowModalArchives(false)
+              getClientsDetail(slug)
+            }}
+            color={activeColor}
+            background={activeBackground}
+            customLoading={true}
+            loadingChildren={
+              <span>10%</span>
+            }
+            borderColor={activeBackground}>
+            <b>Upload file</b>
+          </Button>
+        </Archives>
       </Modal>
     </>
 

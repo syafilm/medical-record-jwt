@@ -40,6 +40,10 @@ class SuperadminsController < ApplicationController
 
   end
 
+  def settings
+    
+  end
+
   private
     def authorize_superadmin
       

@@ -394,7 +394,6 @@ const New = observer(() => {
           </Button>
         </Content>
       </Wrapper>
-
       <Modal
         show={showModalAvatar}
         onClose={() => {

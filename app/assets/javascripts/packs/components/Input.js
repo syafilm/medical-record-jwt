@@ -10,6 +10,7 @@ const Wrapper = styled.div`
 `
 
 const Text = styled.input`
+  font-family: 'OpenSans Regular';
   border: 1px solid ${props => props.error ? `#d9534f` : `#d7e1e7`};
   border-radius: 5px;
   min-height: 38px;
@@ -17,6 +18,23 @@ const Text = styled.input`
   min-width: 250px;
   background: ${props => props.error ? `rgba(251, 57, 51, 0.05)` : `#ECF1F4`};
   padding: 0px 10px;
+  &:focus{
+    outline: 0;
+    border: 1px solid #0083fc;
+  }
+`
+
+const Textarea = styled.textarea`
+  font-family: 'OpenSans Regular';
+  border: 1px solid ${props => props.error ? `#d9534f` : `#d7e1e7`};
+  border-radius: 5px;
+  min-height: 100px;
+  display: inline-flex;
+  min-width: 250px;
+  background: ${props => props.error ? `rgba(251, 57, 51, 0.05)` : `#ECF1F4`};
+  padding: 0px 10px;
+  padding-top: 8px;
+  resize: none;
   &:focus{
     outline: 0;
     border: 1px solid #0083fc;
@@ -36,14 +54,26 @@ const Input = ({
   return(
     <Wrapper>
       {label}
-      <Text 
-        onChange={onChange}
-        type={type}
-        value={value}
-        error={error}
-        className={className}
-        placeholder={placeholder}
-      />
+      {
+        type === 'textarea' ?
+        <Textarea
+          onChange={onChange}
+          type={type}
+          value={value}
+          error={error}
+          className={className}
+          placeholder={placeholder}
+        />
+        :
+        <Text 
+          onChange={onChange}
+          type={type}
+          value={value}
+          error={error}
+          className={className}
+          placeholder={placeholder}
+        />
+      }
     </Wrapper>
   )
 }

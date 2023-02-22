@@ -12,7 +12,8 @@ class ClientSerializer < ActiveModel::Serializer
              :tag,
              :qualification,
              :department,
-             :clinic_structure
+             :clinic_structure,
+             :price_setting
 
   def tag
     object.tags.map{|a| { value: a.slug, label: a.name }}
@@ -33,6 +34,10 @@ class ClientSerializer < ActiveModel::Serializer
 
   def clinic_structure
     ClinicStructure.find_by(client_id: object.id)
+  end
+
+  def price_setting
+    object.price_setting
   end
 
 end

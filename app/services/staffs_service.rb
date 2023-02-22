@@ -44,5 +44,5 @@ class StaffsService
     staff.region = @region if @region.present?
     staff.country = @country if @country.present?
     staff
-  end  
+  end
 end

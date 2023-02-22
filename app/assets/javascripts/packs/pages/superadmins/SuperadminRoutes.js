@@ -7,6 +7,7 @@ const StaffsDetail = React.lazy(() => import('./Staffs/Detail'))
 const ClientsNew = React.lazy(() => import('./Clients/New'))
 const ClientsIndex = React.lazy(() => import('./Clients/Index'))
 const ClientsDetail = React.lazy(() => import('./Clients/Detail'))
+const SettingsIndex = React.lazy(() => import('./Settings/Index'))
 
 const SuperadminRoutes = [
     {
@@ -58,6 +59,13 @@ const SuperadminRoutes = [
       title: `Detail Client`,
       closeEnv: [],
     },
+    {
+      path: `/superadmin/settings`,
+      exact: true,
+      component: SettingsIndex,
+      title: `Settings`,
+      closeEnv: [],
+    }
   ]
   
 export default SuperadminRoutes
